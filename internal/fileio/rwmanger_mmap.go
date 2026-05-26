@@ -17,7 +17,6 @@ package fileio
 import (
 	"errors"
 	"os"
-	"runtime"
 	"sync"
 
 	"github.com/edsrzf/mmap-go"
@@ -41,24 +40,8 @@ var (
 )
 
 func GetMMapRWManager(fd *os.File, path string, fdm *FdManager, segmentSize int64) *MMapRWManager {
-	mmapRWManagerInstancesLock.Lock()
-	defer mmapRWManagerInstancesLock.Unlock()
-	mm, ok := mmapRWManagerInstances[path]
-	if ok {
-		return mm
-	}
-	mm = &MMapRWManager{
-		Fd:          fd,
-		Path:        path,
-		Fdm:         fdm,
-		SegmentSize: segmentSize,
-		ReadCache:   utils.NewLruCache(mmapLRUCacheCapacity),
-		WriteCache:  utils.NewLruCache(mmapLRUCacheCapacity),
-	}
-
-	mmapRWManagerInstances[path] = mm
-	return mm
-
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MMapRWManager represents the RWManager which using mmap.
@@ -77,91 +60,41 @@ type MMapRWManager struct {
 // WriteAt copies data to mapped region from the b slice starting at
 // given off and returns number of bytes copied to the mapped region.
 func (mm *MMapRWManager) WriteAt(b []byte, off int64) (n int, err error) {
-	if off >= int64(mm.SegmentSize) || off < 0 {
-		return 0, ErrIndexOutOfBound
-	}
-	lb := len(b)
-	curOffset := mm.alignedOffset(off)
-	diff := off - curOffset
-	for ; n < lb && curOffset < mm.SegmentSize; curOffset += MmapBlockSize {
-		data, err := mm.accessMMap(mm.WriteCache, curOffset, mmap.RDWR)
-		if err != nil {
-			return n, err
-		}
-		data.mut.Lock()
-		n += copy(data.data[diff:MmapBlockSize], b[n:])
-		data.mut.Unlock()
-		diff = 0
-	}
-	return n, err
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
 // ReadAt copies data to b slice from mapped region starting at
 // given off and returns number of bytes copied to the b slice.
 func (mm *MMapRWManager) ReadAt(b []byte, off int64) (n int, err error) {
-	if off >= int64(mm.SegmentSize) || off < 0 {
-		return 0, ErrIndexOutOfBound
-	}
-	lb := len(b)
-	curOffset := mm.alignedOffset(off)
-	diff := off - curOffset
-	for ; n < lb && curOffset < mm.SegmentSize; curOffset += MmapBlockSize {
-		data, err := mm.accessMMap(mm.ReadCache, curOffset, mmap.RDONLY)
-		if err != nil {
-			return n, err
-		}
-		data.mut.RLock()
-		n += copy(b[n:], data.data[diff:MmapBlockSize])
-		data.mut.RUnlock()
-		diff = 0
-	}
-	return n, err
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
 // Sync synchronizes the mapping's contents to the file's contents on disk.
 func (mm *MMapRWManager) Sync() (err error) {
+	_ = "STUB: not implemented"
+
+	// Release deletes the memory mapped region, flushes any remaining changes
 	return nil
 }
 
-// Release deletes the memory mapped region, flushes any remaining changes
-func (mm *MMapRWManager) Release() (err error) {
-	mm.Fdm.ReduceUsing(mm.Path)
+func (mm *MMapRWManager) Release() (err error) { _ = "STUB: not implemented"; return nil }
 
-	// Remove from global instances map to prevent reuse with stale FdManager
-	mmapRWManagerInstancesLock.Lock()
-	delete(mmapRWManagerInstances, mm.Path)
-	mmapRWManagerInstancesLock.Unlock()
+// Remove from global instances map to prevent reuse with stale FdManager
 
-	return nil
-}
-
-func (mm *MMapRWManager) Size() int64 {
-	return mm.SegmentSize
-}
+func (mm *MMapRWManager) Size() int64 { _ = "STUB: not implemented"; return 0 }
 
 // Close will remove the cache in the fdm of the specified path, and call the close method of the os of the file
-func (mm *MMapRWManager) Close() (err error) {
-	return mm.Fdm.CloseByPath(mm.Path)
-}
+func (mm *MMapRWManager) Close() (err error) { _ = "STUB: not implemented"; return nil }
 
-func (mm *MMapRWManager) alignedOffset(offset int64) int64 {
-	return offset - (offset & (MmapBlockSize - 1))
-}
+func (mm *MMapRWManager) alignedOffset(offset int64) int64 { _ = "STUB: not implemented"; return 0 }
 
 // accessMMap access the MMap data. If for this block the mmap data is not mmapped, will add
 // it into cache.
 func (mm *MMapRWManager) accessMMap(cache *utils.LRUCache, offset int64, prot int) (data *mmapData, err error) {
-	item := cache.Get(offset)
-	if item == nil {
-		newItem, err := newMMapData(mm.Fd, offset, prot)
-		if err != nil {
-			return nil, err
-		}
-		cache.Add(offset, newItem)
-		item = newItem
-	}
-	data = item.(*mmapData)
-	return
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // mmapData is a struct to control the lifetime and access level of mmap.MMap
@@ -172,17 +105,8 @@ type mmapData struct {
 }
 
 func newMMapData(fd *os.File, offset int64, prot int) (md *mmapData, err error) {
-	md = &mmapData{
-		offset: offset,
-	}
-	md.data, err = mmap.MapRegion(fd, int(MmapBlockSize), prot, 0, offset)
-	if err != nil {
-		return nil, err
-	}
-	runtime.SetFinalizer(md, (*mmapData).Close)
-	return md, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-func (md *mmapData) Close() (err error) {
-	return md.data.Unmap()
-}
+func (md *mmapData) Close() (err error) { _ = "STUB: not implemented"; return nil }

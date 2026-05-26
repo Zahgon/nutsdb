@@ -76,55 +76,14 @@ func main() {
 	get("key2") // get value: 12
 }
 
-func get(key string) {
-	if err := db.View(func(tx *nutsdb.Tx) error {
-		value, err := tx.Get(bucket, []byte(key))
-		if err != nil {
-			return err
-		}
-		log.Println("get value: ", string(value))
-		return nil
-	}); err != nil {
-		log.Println(err)
-	}
-}
+func get(key string) { _ = "STUB: not implemented"; return }
 
-func put(key, value string) {
-	if err := db.Update(func(tx *nutsdb.Tx) error {
-		return tx.Put(bucket, []byte(key), []byte(value), nutsdb.Persistent)
-	}); err != nil {
-		log.Println(err)
-	}
-}
+func put(key, value string) { _ = "STUB: not implemented"; return }
 
-func incr(key string) {
-	if err := db.Update(func(tx *nutsdb.Tx) error {
-		return tx.Incr(bucket, []byte(key))
-	}); err != nil {
-		log.Println(err)
-	}
-}
+func incr(key string) { _ = "STUB: not implemented"; return }
 
-func decr(key string) {
-	if err := db.Update(func(tx *nutsdb.Tx) error {
-		return tx.Decr(bucket, []byte(key))
-	}); err != nil {
-		log.Println(err)
-	}
-}
+func decr(key string) { _ = "STUB: not implemented"; return }
 
-func incrBy(key string, value int64) {
-	if err := db.Update(func(tx *nutsdb.Tx) error {
-		return tx.IncrBy(bucket, []byte(key), value)
-	}); err != nil {
-		log.Println(err)
-	}
-}
+func incrBy(key string, value int64) { _ = "STUB: not implemented"; return }
 
-func decrBy(key string, value int64) {
-	if err := db.Update(func(tx *nutsdb.Tx) error {
-		return tx.DecrBy(bucket, []byte(key), value)
-	}); err != nil {
-		log.Println(err)
-	}
-}
+func decrBy(key string, value int64) { _ = "STUB: not implemented"; return }

@@ -15,7 +15,6 @@
 package data
 
 import (
-	"bytes"
 	"errors"
 	"regexp"
 
@@ -37,54 +36,40 @@ type BTree struct {
 // NewBTree creates a new BTree instance with optional TTL support.
 // If no ttlChecker is provided, TTL checking is disabled (useful for internal use like List).
 func NewBTree(bucketId uint64, ttlCheckers ...*ttl.Checker) *BTree {
-	bt := &BTree{
-		index: btree.NewBTreeG(func(a, b *core.Item[core.Record]) bool {
-			return bytes.Compare(a.Key, b.Key) == -1
-		}),
-		bucketId: bucketId,
-	}
-	if len(ttlCheckers) > 0 {
-		bt.ttlChecker = ttlCheckers[0]
-	}
-	// If no ttlChecker provided, bt.ttlChecker remains nil (TTL checking disabled)
-	return bt
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// If no ttlChecker provided, bt.ttlChecker remains nil (TTL checking disabled)
 
 // isValid checks if an item is valid (not expired) using the TTL checker.
 // If no TTL checker is configured, all items are considered valid.
 // This method triggers expiration callbacks for expired items.
 func (bt *BTree) isValid(item *core.Item[core.Record]) bool {
-	if bt.ttlChecker == nil {
-		return item.Record != nil
-	}
-	return bt.ttlChecker.FilterExpiredRecord(bt.bucketId, item.Key, item.Record, core.DataStructureBTree)
+	_ = "STUB: not implemented"
+	return false
 }
 
 // getItem retrieves an item by key without TTL validation.
 func (bt *BTree) getItem(key []byte) (*core.Item[core.Record], bool) {
-	return bt.index.Get(core.NewItem[core.Record](key, nil))
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 // getValidItem retrieves an item by key with TTL validation.
 // Triggers expiration callbacks for expired items.
 func (bt *BTree) getValidItem(key []byte) (*core.Item[core.Record], bool) {
-	if item, ok := bt.getItem(key); ok && bt.isValid(item) {
-		return item, true
-	}
+	_ = "STUB: not implemented"
 	return nil, false
 }
 
 // scan returns a Scanner for fluent query construction.
-func (bt *BTree) scan() Scanner {
-	return newBTreeScanner(bt)
-}
+func (bt *BTree) scan() Scanner { _ = "STUB: not implemented"; return *new(Scanner) }
 
 // Find retrieves a record by key, automatically filtering expired records.
 // Triggers expiration callbacks for expired records.
 func (bt *BTree) Find(key []byte) (*core.Record, bool) {
-	if item, ok := bt.getValidItem(key); ok {
-		return item.Record, true
-	}
+	_ = "STUB: not implemented"
 	return nil, false
 }
 
@@ -92,113 +77,80 @@ func (bt *BTree) Find(key []byte) (*core.Record, bool) {
 // This is used for internal verification (e.g., checking timestamps before deletion).
 // Returns the record even if expired, allowing caller to check timestamp.
 func (bt *BTree) FindForVerification(key []byte) (*core.Record, bool) {
-	item, ok := bt.getItem(key)
-	if !ok || item.Record == nil {
-		return nil, false
-	}
-	return item.Record, true
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 func (bt *BTree) InsertRecord(key []byte, record *core.Record) bool {
-	_, replaced := bt.index.Set(core.NewItem(key, record))
-	return replaced
+	_ = "STUB: not implemented"
+	return false
 }
 
-func (bt *BTree) Delete(key []byte) bool {
-	_, deleted := bt.index.Delete(core.NewItem[core.Record](key, nil))
-	return deleted
-}
+func (bt *BTree) Delete(key []byte) bool { _ = "STUB: not implemented"; return false }
 
 // All returns all non-expired records in the BTree.
-func (bt *BTree) All() []*core.Record {
-	return bt.scan().Collect()
-}
+func (bt *BTree) All() []*core.Record { _ = "STUB: not implemented"; return nil }
 
 // AllItems returns all non-expired items in the BTree.
-func (bt *BTree) AllItems() []*core.Item[core.Record] {
-	return bt.scan().CollectItems()
-}
+func (bt *BTree) AllItems() []*core.Item[core.Record] { _ = "STUB: not implemented"; return nil }
 
 // Range returns records in the specified key range, filtering expired ones.
-func (bt *BTree) Range(start, end []byte) []*core.Record {
-	return bt.scan().From(start).To(end).Collect()
-}
+func (bt *BTree) Range(start, end []byte) []*core.Record { _ = "STUB: not implemented"; return nil }
 
 // PrefixScan returns records with the specified prefix, filtering expired ones.
 func (bt *BTree) PrefixScan(prefix []byte, offset, limitNum int) []*core.Record {
-	return bt.scan().Prefix(prefix).Skip(offset).Take(limitNum).Collect()
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PrefixSearchScan returns records with the specified prefix matching the regex.
 func (bt *BTree) PrefixSearchScan(prefix []byte, reg string, offset, limitNum int) []*core.Record {
-	return bt.scan().Prefix(prefix).Match(reg).Skip(offset).Take(limitNum).Collect()
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (bt *BTree) Count() int {
-	return bt.index.Len()
-}
+func (bt *BTree) Count() int { _ = "STUB: not implemented"; return 0 }
 
 // PopMin removes and returns the minimum key record, filtering expired ones.
 func (bt *BTree) PopMin() (*core.Item[core.Record], bool) {
-	return bt.popUntilValid(bt.index.PopMin)
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 // PopMax removes and returns the maximum key record, filtering expired ones.
 func (bt *BTree) PopMax() (*core.Item[core.Record], bool) {
-	return bt.popUntilValid(bt.index.PopMax)
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 // popUntilValid pops items until finding a valid (non-expired) one.
 func (bt *BTree) popUntilValid(pop func() (*core.Item[core.Record], bool)) (*core.Item[core.Record], bool) {
-	for {
-		item, ok := pop()
-		if !ok {
-			return nil, false
-		}
-		if bt.isValid(item) {
-			return item, true
-		}
-	}
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 // Min returns the minimum key record, filtering expired ones.
 func (bt *BTree) Min() (*core.Item[core.Record], bool) {
-	return bt.scan().Ascending().First()
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 // Max returns the maximum key record, filtering expired ones.
 func (bt *BTree) Max() (*core.Item[core.Record], bool) {
-	return bt.scan().Descending().First()
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
-func (bt *BTree) Iter() btree.IterG[*core.Item[core.Record]] {
-	return bt.index.Iter()
-}
+func (bt *BTree) Iter() btree.IterG[*core.Item[core.Record]] { _ = "STUB: not implemented"; return nil }
 
 // GetTTL returns the remaining TTL for a key in seconds.
 // Returns (-1, nil) for persistent, (remaining, nil) for valid, (0, ErrKeyNotFound) for expired/missing.
 // Returns (0, ErrKeyNotFound) if TTL checking is disabled.
-func (bt *BTree) GetTTL(key []byte) (int64, error) {
-	if bt.ttlChecker == nil {
-		return 0, ErrKeyNotFound
-	}
-	if item, ok := bt.getValidItem(key); ok {
-		return bt.ttlChecker.CalculateRemainingTTL(item.Record.TTL, item.Record.Timestamp), nil
-	}
-	return 0, ErrKeyNotFound
-}
+func (bt *BTree) GetTTL(key []byte) (int64, error) { _ = "STUB: not implemented"; return 0, nil }
 
 // IsExpiredKey checks if a key exists and is expired.
 // Returns false if TTL checking is disabled.
-func (bt *BTree) IsExpiredKey(key []byte) bool {
-	if bt.ttlChecker == nil {
-		return false
-	}
-	if item, ok := bt.getItem(key); ok {
-		return bt.ttlChecker.IsExpired(item.Record.TTL, item.Record.Timestamp)
-	}
-	return false
-}
+func (bt *BTree) IsExpiredKey(key []byte) bool { _ = "STUB: not implemented"; return false }
 
 // Ensure BTreeScanner implements Scanner interface.
 var _ Scanner = (*BTreeScanner)(nil)
@@ -223,263 +175,135 @@ type BTreeScanner struct {
 }
 
 // newBTreeScanner creates a new BTreeScanner for the given BTree.
-func newBTreeScanner(bt *BTree) *BTreeScanner {
-	return &BTreeScanner{
-		bt:         bt,
-		ttlChecker: bt.ttlChecker,
-		ds:         core.DataStructureBTree,
-		direction:  Forward,
-		limit:      -1, // no limit by default
-	}
-}
+func newBTreeScanner(bt *BTree) *BTreeScanner { _ = "STUB: not implemented"; return nil }
+
+// no limit by default
 
 // Direction sets the scan direction (Forward or Reverse).
 func (b *BTreeScanner) Direction(d ScanDirection) Scanner {
-	b.direction = d
-	return b
+	_ = "STUB: not implemented"
+	return *new(Scanner)
 }
 
 // Ascending sets forward iteration direction.
-func (b *BTreeScanner) Ascending() Scanner {
-	b.direction = Forward
-	return b
-}
+func (b *BTreeScanner) Ascending() Scanner { _ = "STUB: not implemented"; return *new(Scanner) }
 
 // Descending sets reverse iteration direction.
-func (b *BTreeScanner) Descending() Scanner {
-	b.direction = Reverse
-	return b
-}
+func (b *BTreeScanner) Descending() Scanner { _ = "STUB: not implemented"; return *new(Scanner) }
 
 // From sets the starting key for the scan (inclusive).
-func (b *BTreeScanner) From(key []byte) Scanner {
-	b.pivot = key
-	b.startKey = key
-	return b
-}
+func (b *BTreeScanner) From(key []byte) Scanner { _ = "STUB: not implemented"; return *new(Scanner) }
 
 // To sets the ending key for the scan (inclusive).
 func (b *BTreeScanner) To(key []byte) Scanner {
-	b.endKey = key
-	return b
+	_ = "STUB: not implemented"
+	return *
+
+	// Prefix sets a key prefix filter.
+	new(Scanner)
 }
 
-// Prefix sets a key prefix filter.
 func (b *BTreeScanner) Prefix(prefix []byte) Scanner {
-	b.prefix = prefix
-	if b.pivot == nil {
-		b.pivot = prefix
-	}
-	return b
+	_ = "STUB: not implemented"
+	return *new(Scanner)
 }
 
 // Match sets a regex pattern to match against keys (after prefix removal if prefix is set).
 func (b *BTreeScanner) Match(pattern string) Scanner {
-	b.regex = regexp.MustCompile(pattern)
-	return b
+	_ = "STUB: not implemented"
+	return *new(Scanner)
 }
 
 // Skip sets the number of matching records to skip.
 func (b *BTreeScanner) Skip(n int) Scanner {
-	b.offset = n
-	return b
+	_ = "STUB: not implemented"
+	return *
+
+	// Take sets the maximum number of records to return.
+	new(Scanner)
 }
 
-// Take sets the maximum number of records to return.
 func (b *BTreeScanner) Take(n int) Scanner {
-	b.limit = n
-	return b
+	_ = "STUB: not implemented"
+	return *
+
+	// Where adds a custom filter predicate.
+	new(Scanner)
 }
 
-// Where adds a custom filter predicate.
 func (b *BTreeScanner) Where(fn func(*core.Item[core.Record]) bool) Scanner {
-	b.filter = fn
-	return b
+	_ = "STUB: not implemented"
+	return *
+
+	// IncludeExpired disables TTL filtering (includes expired records).
+	new(Scanner)
 }
 
-// IncludeExpired disables TTL filtering (includes expired records).
-func (b *BTreeScanner) IncludeExpired() Scanner {
-	b.skipTTL = true
-	return b
-}
+func (b *BTreeScanner) IncludeExpired() Scanner { _ = "STUB: not implemented"; return *new(Scanner) }
 
 // WithDataStructure sets the data structure type for TTL callback.
 func (b *BTreeScanner) WithDataStructure(ds uint16) Scanner {
-	b.ds = ds
-	return b
+	_ = "STUB: not implemented"
+	return *
+
+	// checkItem validates an item against all filters and returns the iteration result.
+	new(Scanner)
 }
 
-// checkItem validates an item against all filters and returns the iteration result.
 func (b *BTreeScanner) checkItem(item *core.Item[core.Record]) iterResult {
+	_ = "STUB: not implemented"
 	// Range/Prefix checks first - can terminate iteration early
-	if !b.inRange(item) {
-		return iterStop
-	}
-
-	if b.prefix != nil && !bytes.HasPrefix(item.Key, b.prefix) {
-		if b.direction == Forward {
-			return iterStop
-		}
-		return iterContinue
-	}
-
-	// TTL check
-	if !b.skipTTL && !b.isValid(item) {
-		return iterContinue
-	}
-
-	// Regex check
-	if b.regex != nil {
-		key := item.Key
-		if b.prefix != nil {
-			key = bytes.TrimPrefix(key, b.prefix)
-		}
-		if !b.regex.Match(key) {
-			return iterContinue
-		}
-	}
-
-	// Custom filter
-	if b.filter != nil && !b.filter(item) {
-		return iterContinue
-	}
-
-	return iterMatch
+	return *new(iterResult)
 }
+
+// TTL check
+
+// Regex check
+
+// Custom filter
 
 // Collect executes the scan and returns matching records.
-func (b *BTreeScanner) Collect() []*core.Record {
-	items := b.CollectItems()
-	records := make([]*core.Record, len(items))
-	for i, item := range items {
-		records[i] = item.Record
-	}
-	return records
-}
+func (b *BTreeScanner) Collect() []*core.Record { _ = "STUB: not implemented"; return nil }
 
 // CollectItems executes the scan and returns matching items (with keys).
 func (b *BTreeScanner) CollectItems() []*core.Item[core.Record] {
-	results := make([]*core.Item[core.Record], 0)
-	offset := b.offset
-	limit := b.limit
-
-	b.buildIterator()(func(item *core.Item[core.Record]) bool {
-		switch b.checkItem(item) {
-		case iterStop:
-			return false
-		case iterContinue:
-			return true
-		}
-
-		if offset > 0 {
-			offset--
-			return true
-		}
-
-		results = append(results, item)
-
-		if limit > 0 {
-			limit--
-			return limit != 0
-		}
-		return true
-	})
-
-	return results
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // First returns the first matching record.
 func (b *BTreeScanner) First() (*core.Item[core.Record], bool) {
-	b.limit = 1
-	items := b.CollectItems()
-	if len(items) == 0 {
-		return nil, false
-	}
-	return items[0], true
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 // Count returns the number of matching records.
-func (b *BTreeScanner) Count() int {
-	count := 0
-	b.buildIterator()(func(item *core.Item[core.Record]) bool {
-		switch b.checkItem(item) {
-		case iterStop:
-			return false
-		case iterContinue:
-			return true
-		}
-		count++
-		return true
-	})
-	return count
-}
+func (b *BTreeScanner) Count() int { _ = "STUB: not implemented"; return 0 }
 
 // ForEach iterates over matching records without collecting them.
 func (b *BTreeScanner) ForEach(fn func(*core.Item[core.Record]) bool) {
-	offset := b.offset
-	limit := b.limit
-
-	b.buildIterator()(func(item *core.Item[core.Record]) bool {
-		switch b.checkItem(item) {
-		case iterStop:
-			return false
-		case iterContinue:
-			return true
-		}
-
-		if offset > 0 {
-			offset--
-			return true
-		}
-
-		if limit > 0 {
-			limit--
-			if limit == 0 {
-				fn(item)
-				return false
-			}
-		}
-		return fn(item)
-	})
+	_ = "STUB: not implemented"
+	return
 }
 
 // buildIterator returns the appropriate btree iterator based on direction and pivot.
 func (b *BTreeScanner) buildIterator() func(func(*core.Item[core.Record]) bool) {
-	pivot := b.pivot
-
-	if b.direction == Reverse {
-		if pivot != nil {
-			return func(fn func(*core.Item[core.Record]) bool) {
-				b.bt.index.Descend(&core.Item[core.Record]{Key: pivot}, fn)
-			}
-		}
-		return b.bt.index.Reverse
-	}
-
-	// Forward
-	if pivot != nil {
-		return func(fn func(*core.Item[core.Record]) bool) {
-			b.bt.index.Ascend(&core.Item[core.Record]{Key: pivot}, fn)
-		}
-	}
-	return b.bt.index.Scan
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Forward
 
 // isValid checks if an item is not expired.
 func (b *BTreeScanner) isValid(item *core.Item[core.Record]) bool {
-	if b.ttlChecker == nil || item.Record == nil {
-		return true
-	}
-	return b.ttlChecker.FilterExpiredRecord(b.bt.bucketId, item.Key, item.Record, b.ds)
+	_ = "STUB: not implemented"
+	return false
 }
 
 // inRange checks if an item is within the specified key range.
 func (b *BTreeScanner) inRange(item *core.Item[core.Record]) bool {
-	if b.direction == Forward {
-		return (b.startKey == nil || bytes.Compare(item.Key, b.startKey) >= 0) &&
-			(b.endKey == nil || bytes.Compare(item.Key, b.endKey) <= 0)
-	}
-	// Reverse: item should be >= endKey (lower bound) and <= startKey (upper bound/pivot)
-	return (b.endKey == nil || bytes.Compare(item.Key, b.endKey) >= 0) &&
-		(b.startKey == nil || bytes.Compare(item.Key, b.startKey) <= 0)
+	_ = "STUB: not implemented"
+	return false
 }
+
+// Reverse: item should be >= endKey (lower bound) and <= startKey (upper bound/pivot)

@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/nutsdb/nutsdb"
@@ -83,175 +82,26 @@ func main() {
 	getUncommittedUpdateInSameTransaction()
 }
 
-func createBucket() {
-	if err := db.Update(
-		func(tx *nutsdb.Tx) error {
-			return tx.NewBucket(nutsdb.DataStructureBTree, bucket)
-		}); err != nil {
-		log.Fatal(err)
-	}
-}
+func createBucket() { _ = "STUB: not implemented"; return }
 
-func delete() {
-	if err := db.Update(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("name1")
-			return tx.Delete(bucket, key)
-		}); err != nil {
-		log.Fatal(err)
-	}
-}
+func delete() { _ = "STUB: not implemented"; return }
 
-func put() {
-	if err := db.Update(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("name1")
-			val := []byte("val1")
-			return tx.Put(bucket, key, val, 0)
-		}); err != nil {
-		log.Fatal(err)
-	}
-}
-func put2() {
-	if err := db.Update(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("name1")
-			val := []byte("val2")
-			return tx.Put(bucket, key, val, 0)
-		}); err != nil {
-		log.Fatal(err)
-	}
-}
+func put() { _ = "STUB: not implemented"; return }
 
-func put3() {
-	if err := db.Update(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("name2")
-			val := []byte("val2")
-			return tx.PutIfNotExists(bucket, key, val, 0)
-		}); err != nil {
-		log.Fatal(err)
-	}
-}
+func put2() { _ = "STUB: not implemented"; return }
 
-func put4() {
-	if err := db.Update(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("name2")
-			val := []byte("val2")
-			return tx.PutIfExists(bucket, key, val, 100)
-		}); err != nil {
-		log.Fatal(err)
-	}
-}
+func put3() { _ = "STUB: not implemented"; return }
 
-func read() {
-	if err := db.View(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("name1")
-			value, err := tx.Get(bucket, key)
-			if err != nil {
-				return err
-			}
-			fmt.Println("val:", string(value))
+func put4() { _ = "STUB: not implemented"; return }
 
-			return nil
-		}); err != nil {
-		log.Println(err)
-	}
-}
+func read() { _ = "STUB: not implemented"; return }
 
-func valueLen() {
-	if err := db.View(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("name1")
-			value, err := tx.ValueLen(bucket, key)
-			if err != nil {
-				return err
-			}
-			fmt.Println("value length:", value)
+func valueLen() { _ = "STUB: not implemented"; return }
 
-			return nil
-		}); err != nil {
-		log.Println(err)
-	}
-}
+func getSet() { _ = "STUB: not implemented"; return }
 
-func getSet() {
-	if err := db.Update(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("name1")
-			val := []byte("val3")
-			oldValue, err := tx.GetSet(bucket, key, val)
-			if err != nil {
-				return err
-			}
+func getTTL() { _ = "STUB: not implemented"; return }
 
-			fmt.Println("old value :", string(oldValue))
+func persist() { _ = "STUB: not implemented"; return }
 
-			return nil
-		}); err != nil {
-		log.Println(err)
-	}
-}
-
-func getTTL() {
-	if err := db.View(func(tx *nutsdb.Tx) error {
-		key := []byte("name2")
-		ttl, err := tx.GetTTL(bucket, key)
-		if err != nil {
-			return err
-		}
-		fmt.Println("ttl :", ttl)
-		return nil
-	}); err != nil {
-		log.Println(err)
-	}
-}
-
-func persist() {
-	if err := db.Update(func(tx *nutsdb.Tx) error {
-		key := []byte("name2")
-		return tx.Persist(bucket, key)
-	}); err != nil {
-		log.Println(err)
-	}
-}
-
-func getUncommittedUpdateInSameTransaction() {
-	log.Println("start run: Get uncommitted update in same transaction")
-	currBucket := "bucketForTransactionNew"
-	key := []byte("testkey")
-	val1 := []byte("value1")
-	val2 := []byte("value2")
-	must := func(f func() error) {
-		if err := f(); err != nil {
-			panic(err)
-		}
-	}
-	if err := db.Update(func(tx *nutsdb.Tx) (err error) {
-		must(func() error {
-			return tx.NewKVBucket(currBucket)
-		})
-		must(func() error {
-			return tx.Put(currBucket, key, val1, 0)
-		})
-		vcurr, err := tx.Get(currBucket, key)
-		log.Printf("expect value is '%v', value is '%v', %v", string(val1), string(vcurr), err)
-		return
-	}); err != nil {
-		log.Printf("failed update: %v", err)
-		return
-	}
-	if err := db.Update(func(tx *nutsdb.Tx) (err error) {
-		must(func() error {
-			return tx.Put(currBucket, key, val2, 0)
-		})
-		vcurr, err := tx.Get(currBucket, key)
-		log.Printf("expect value is '%v', value is '%v', %v", string(val2), string(vcurr), err)
-		return
-	}); err != nil {
-		log.Printf("failed update: %v", err)
-		return
-	}
-}
+func getUncommittedUpdateInSameTransaction() { _ = "STUB: not implemented"; return }

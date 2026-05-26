@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"os"
 
 	"github.com/nutsdb/nutsdb"
@@ -68,238 +66,38 @@ func main() {
 	testLKeys()
 }
 
-func testRPushAndLPush() {
-	fmt.Println("RPushAndLPush init data")
-	if err := db.Update(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("myList")
-			val := []byte("val2")
-			return tx.RPush(bucket, key, val)
-		}); err != nil {
-		log.Fatal(err)
-	}
+func testRPushAndLPush() { _ = "STUB: not implemented"; return }
 
-	if err := db.Update(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("myList")
-			val := []byte("val4")
-			return tx.RPush(bucket, key, val)
-		}); err != nil {
-		log.Fatal(err)
-	}
+func testLRange() { _ = "STUB: not implemented"; return }
 
-	if err := db.Update(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("myList")
-			val := []byte("val3")
-			return tx.RPush(bucket, key, val)
-		}); err != nil {
-		log.Fatal(err)
-	}
-	if err := db.Update(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("myList")
-			val := []byte("val2")
-			return tx.RPush(bucket, key, val)
-		}); err != nil {
-		log.Fatal(err)
-	}
+func testLPop() { _ = "STUB: not implemented"; return }
 
-	if err := db.Update(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("myList")
-			val := []byte("val1")
-			return tx.LPush(bucket, key, val)
-		}); err != nil {
-		log.Fatal(err)
-	}
-}
+// val1
 
-func testLRange() {
-	fmt.Println("LRange:")
-	if err := db.View(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("myList")
-			items, err := tx.LRange(bucket, key, 0, -1)
-			if err != nil {
-				return err
-			}
+func testRPop() { _ = "STUB: not implemented"; return }
 
-			for _, item := range items {
-				fmt.Println(string(item))
-			}
-			return nil
-		}); err != nil {
-		log.Fatal(err)
-	}
-}
+// val2
 
-func testLPop() {
-	if err := db.Update(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("myList")
-			item, err := tx.LPop(bucket, key)
-			if err != nil {
-				return err
-			}
-			fmt.Println("LPop item:", string(item)) // val1
-			return nil
-		}); err != nil {
-		log.Fatal(err)
-	}
-}
+func testRPushItems() { _ = "STUB: not implemented"; return }
 
-func testRPop() {
-	if err := db.Update(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("myList")
-			item, err := tx.RPop(bucket, key)
-			if err != nil {
-				return err
-			}
-			fmt.Println("RPop item:", string(item)) // val2
-			return nil
-		}); err != nil {
-		log.Fatal(err)
-	}
-}
+func testLRem() { _ = "STUB: not implemented"; return }
 
-func testRPushItems() {
-	val1 := []byte("val1")
-	val2 := []byte("val2")
-	val3 := []byte("val3")
-	if err := db.Update(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("myList")
-			return tx.RPush(bucket, key, val1)
-		}); err != nil {
-		log.Fatal(err)
-	}
+// count := 1
 
-	if err := db.Update(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("myList")
-			return tx.RPush(bucket, key, val2)
-		}); err != nil {
-		log.Fatal(err)
-	}
-	if err := db.Update(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("myList")
-			return tx.RPush(bucket, key, val3)
-		}); err != nil {
-		log.Fatal(err)
-	}
-	if err := db.Update(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("myList")
-			return tx.RPush(bucket, key, val2)
-		}); err != nil {
-		log.Fatal(err)
-	}
+func testLPeek() { _ = "STUB: not implemented"; return }
 
-	fmt.Println("RPushItems 4 items: ", string(val1), string(val2), string(val3), string(val2))
-}
+// val11
 
-func testLRem() {
-	value := []byte("val2")
-	count := -1
-	// count := 1
-	if err := db.Update(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("myList")
-			err := tx.LRem(bucket, key, count, value)
-			return err
-		}); err != nil {
-		log.Fatal(err)
-	}
-	if count < 0 {
-		count = -count
-	}
-	fmt.Println("LRem count : ", count, string(value))
-}
+func testRPeek() { _ = "STUB: not implemented"; return }
 
-func testLPeek() {
-	if err := db.View(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("myList")
-			item, err := tx.LPeek(bucket, key)
-			if err != nil {
-				return err
-			}
+// val2
 
-			fmt.Println("LPeek item:", string(item)) // val11
-			return nil
-		}); err != nil {
-		log.Fatal(err)
-	}
-}
+func testLTrim() { _ = "STUB: not implemented"; return }
 
-func testRPeek() {
-	if err := db.View(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("myList")
-			item, err := tx.RPeek(bucket, key)
-			if err != nil {
-				return err
-			}
+func testLSize() { _ = "STUB: not implemented"; return }
 
-			fmt.Println("RPeek item:", string(item)) // val2
-			return nil
-		}); err != nil {
-		log.Fatal(err)
-	}
-}
+func testLRemByIndex() { _ = "STUB: not implemented"; return }
 
-func testLTrim() {
-	if err := db.Update(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("myList")
-			return tx.LTrim(bucket, key, 0, 2)
-		}); err != nil {
-		log.Fatal(err)
-	}
-}
+func testLKeys() { _ = "STUB: not implemented"; return }
 
-func testLSize() {
-	if err := db.Update(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("myList")
-			size, err := tx.LSize(bucket, key)
-			if err != nil {
-				return err
-			}
-
-			fmt.Println("myList size is ", size)
-			return nil
-		}); err != nil {
-		log.Fatal(err)
-	}
-}
-
-func testLRemByIndex() {
-	if err := db.Update(
-		func(tx *nutsdb.Tx) error {
-			key := []byte("myList")
-			err := tx.LRemByIndex(bucket, key, 0)
-			return err
-		}); err != nil {
-		log.Fatal(err)
-	}
-}
-
-func testLKeys() {
-	if err := db.View(
-		func(tx *nutsdb.Tx) error {
-			var keys []string
-			err := tx.LKeys(bucket, "*", func(key string) bool {
-				keys = append(keys, key)
-				// true: continue, false: break
-				return true
-			})
-			fmt.Printf("keys: %v\n", keys)
-			return err
-		}); err != nil {
-		log.Fatal(err)
-	}
-}
+// true: continue, false: break

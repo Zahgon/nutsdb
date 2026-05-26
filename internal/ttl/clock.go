@@ -44,29 +44,34 @@ type RealClock struct{}
 
 // NewRealClock creates a new RealClock instance.
 func NewRealClock() Clock {
-	return &RealClock{}
+	_ = "STUB: not implemented"
+	return *
+
+	// NowMillis returns the current system time in milliseconds since Unix epoch.
+	new(Clock)
 }
 
-// NowMillis returns the current system time in milliseconds since Unix epoch.
-func (rc *RealClock) NowMillis() int64 {
-	return time.Now().UnixMilli()
-}
+func (rc *RealClock) NowMillis() int64 { _ = "STUB: not implemented"; return 0 }
 
 // NowSeconds returns the current system time in seconds since Unix epoch.
-func (rc *RealClock) NowSeconds() int64 {
-	return time.Now().Unix()
-}
+func (rc *RealClock) NowSeconds() int64 { _ = "STUB: not implemented"; return 0 }
 
 func (rc *RealClock) SetOnAdvance(onAdvance func(newTimeMillis int64)) {
+	_ = "STUB: not implemented"
 	// No-op for RealClock
+	return
 }
 
 func (rc *RealClock) AdvanceTime(duration time.Duration) {
+	_ = "STUB: not implemented"
 	// No-op for RealClock
+	return
 }
 
 func (rc *RealClock) SetTime(timeMillis int64) {
+	_ = "STUB: not implemented"
 	// No-op for RealClock
+	return
 }
 
 // MockClock implements Clock with controllable time for testing.
@@ -77,51 +82,22 @@ type MockClock struct {
 }
 
 // NewMockClock creates a new MockClock instance with the specified initial time.
-func NewMockClock(initialTime int64) Clock {
-	return &MockClock{time: initialTime}
-}
+func NewMockClock(initialTime int64) Clock { _ = "STUB: not implemented"; return *new(Clock) }
 
 // SetOnAdvance sets a callback to be called when the clock time is advanced.
 func (mc *MockClock) SetOnAdvance(onAdvance func(newTimeMillis int64)) {
-	mc.mu.Lock()
-	defer mc.mu.Unlock()
-	mc.onAdvance = onAdvance
+	_ = "STUB: not implemented"
+	return
 }
 
 // NowMillis returns the current mock time in milliseconds since Unix epoch.
-func (mc *MockClock) NowMillis() int64 {
-	mc.mu.RLock()
-	defer mc.mu.RUnlock()
-	return mc.time
-}
+func (mc *MockClock) NowMillis() int64 { _ = "STUB: not implemented"; return 0 }
 
 // NowSeconds returns the current mock time in seconds since Unix epoch.
-func (mc *MockClock) NowSeconds() int64 {
-	return mc.NowMillis() / 1000
-}
+func (mc *MockClock) NowSeconds() int64 { _ = "STUB: not implemented"; return 0 }
 
 // AdvanceTime moves the clock forward by the specified duration.
-func (mc *MockClock) AdvanceTime(duration time.Duration) {
-	mc.mu.Lock()
-	mc.time += duration.Milliseconds()
-	newTime := mc.time
-	onAdvance := mc.onAdvance
-	mc.mu.Unlock()
-
-	if onAdvance != nil {
-		onAdvance(newTime)
-	}
-}
+func (mc *MockClock) AdvanceTime(duration time.Duration) { _ = "STUB: not implemented"; return }
 
 // SetTime sets the clock to a specific time in milliseconds since Unix epoch.
-func (mc *MockClock) SetTime(timeMillis int64) {
-	mc.mu.Lock()
-	mc.time = timeMillis
-	newTime := mc.time
-	onAdvance := mc.onAdvance
-	mc.mu.Unlock()
-
-	if onAdvance != nil {
-		onAdvance(newTime)
-	}
-}
+func (mc *MockClock) SetTime(timeMillis int64) { _ = "STUB: not implemented"; return }

@@ -19,11 +19,7 @@ import "github.com/nutsdb/nutsdb/internal/utils"
 type ILogger = utils.ILogger
 
 // SetLogger Set the internal logger for nutsdb.
-func SetLogger(logger ILogger) {
-	utils.SetLogger(logger)
-}
+func SetLogger(logger ILogger) { _ = "STUB: not implemented"; return }
 
 // GetLogger Get the internal logger for nutsdb.
-func GetLogger() ILogger {
-	return utils.GetLogger()
-}
+func GetLogger() ILogger { _ = "STUB: not implemented"; return *new(ILogger) }

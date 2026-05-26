@@ -1,7 +1,6 @@
 package nutsdb
 
 import (
-	"errors"
 	"sync"
 	"time"
 )
@@ -16,26 +15,6 @@ type Watcher struct {
 	muReady sync.Mutex
 }
 
-func (w *Watcher) WaitReady(timeout time.Duration) error {
-	select {
-	case <-w.readyCh:
-		return nil
-	case <-time.After(timeout):
-		return errors.New("wait for watcher ready timeout")
-	}
-}
+func (w *Watcher) WaitReady(timeout time.Duration) error { _ = "STUB: not implemented"; return nil }
 
-func (w *Watcher) Run() error {
-	w.muReady.Lock()
-
-	if w.isReady {
-		w.muReady.Unlock()
-		return nil
-	}
-
-	w.isReady = true
-	close(w.readyCh)
-	w.muReady.Unlock()
-
-	return w.watchingFunc()
-}
+func (w *Watcher) Run() error { _ = "STUB: not implemented"; return nil }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/nutsdb/nutsdb"
 )
 
@@ -42,48 +43,6 @@ func main() {
 	reverseIterative()
 }
 
-func forwardIteration() {
-	fmt.Println("--------begin forwardIteration--------")
-	tx, err := db.Begin(false)
-	if err != nil {
-		panic(err)
-	}
-	iterator := nutsdb.NewIterator(tx, bucket, nutsdb.IteratorOptions{Reverse: false})
-	for {
-		value, _ := iterator.Value()
-		fmt.Println("Key: ", string(iterator.Key()))
-		fmt.Println("Value: ", string(value))
-		fmt.Println()
-		if !iterator.Next() {
-			break
-		}
-	}
-	err = tx.Commit()
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("--------end forwardIteration--------")
-}
+func forwardIteration() { _ = "STUB: not implemented"; return }
 
-func reverseIterative() {
-	fmt.Println("--------start reverseIterative--------")
-	tx, err := db.Begin(false)
-	if err != nil {
-		panic(err)
-	}
-	iterator := nutsdb.NewIterator(tx, bucket, nutsdb.IteratorOptions{Reverse: true})
-	for {
-		value, _ := iterator.Value()
-		fmt.Println("Key: ", string(iterator.Key()))
-		fmt.Println("Value: ", string(value))
-		fmt.Println()
-		if !iterator.Next() {
-			break
-		}
-	}
-	err = tx.Commit()
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("--------end reverseIterative--------")
-}
+func reverseIterative() { _ = "STUB: not implemented"; return }

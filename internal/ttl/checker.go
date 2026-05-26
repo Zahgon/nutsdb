@@ -30,89 +30,54 @@ type Checker struct {
 }
 
 // NewChecker creates a new Checker with the specified clock.
-func NewChecker(clk Clock) *Checker {
-	return &Checker{Clock: clk}
-}
+func NewChecker(clk Clock) *Checker { _ = "STUB: not implemented"; return nil }
 
 // SetExpiredCallback sets a callback to be invoked when expired records are detected.
-func (c *Checker) SetExpiredCallback(callback ExpiredCallback) {
-	c.onExpired = callback
-}
+func (c *Checker) SetExpiredCallback(callback ExpiredCallback) { _ = "STUB: not implemented"; return }
 
 func (c *Checker) SetClock(clk Clock) {
-	c.Clock = clk
+	_ = "STUB: not implemented"
+
+	// IsExpired checks if a record is expired based on TTL and timestamp.
+	// TTL is in seconds, timestamp is in milliseconds.
+	return
 }
 
-// IsExpired checks if a record is expired based on TTL and timestamp.
-// TTL is in seconds, timestamp is in milliseconds.
 func (c *Checker) IsExpired(ttl uint32, timestamp uint64) bool {
-	if ttl == Persistent {
-		return false
-	}
-	now := c.Clock.NowMillis()
-	expirationTime := int64(timestamp) + int64(ttl)*1000
-	return now >= expirationTime
+	_ = "STUB: not implemented"
+	return false
 }
 
 // FilterExpiredRecord checks a single record and triggers cleanup if expired.
 // Returns true if the record is valid (not expired).
 func (c *Checker) FilterExpiredRecord(bucketId uint64, key []byte, record *core.Record, ds uint16) bool {
-	if record == nil {
-		return false
-	}
-	if c.IsExpired(record.TTL, record.Timestamp) {
-		c.triggerCallback(bucketId, key, ds, record.Timestamp)
-		return false
-	}
-	return true
+	_ = "STUB: not implemented"
+	return false
 }
 
 // FilterExpiredRecords filters a slice of records, removing expired ones.
 // Returns a new slice containing only valid (non-expired) records.
 func (c *Checker) FilterExpiredRecords(bucketId uint64, records []*core.Record, ds uint16) []*core.Record {
-	valid := make([]*core.Record, 0, len(records))
-	for _, record := range records {
-		if !c.IsExpired(record.TTL, record.Timestamp) {
-			valid = append(valid, record)
-		} else {
-			c.triggerCallback(bucketId, record.Key, ds, record.Timestamp)
-		}
-	}
-	return valid
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // FilterExpiredItems filters a slice of items, removing expired ones.
 // Returns a new slice containing only valid (non-expired) items.
 func (c *Checker) FilterExpiredItems(bucketId uint64, items []*core.Item[core.Record], ds uint16) []*core.Item[core.Record] {
-	valid := make([]*core.Item[core.Record], 0, len(items))
-	for _, item := range items {
-		if item.Record != nil && !c.IsExpired(item.Record.TTL, item.Record.Timestamp) {
-			valid = append(valid, item)
-		} else if item.Record != nil {
-			c.triggerCallback(bucketId, item.Key, ds, item.Record.Timestamp)
-		}
-	}
-	return valid
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // CalculateRemainingTTL calculates remaining TTL in seconds.
 // Returns -1 for persistent, 0 for expired, positive for remaining seconds.
 func (c *Checker) CalculateRemainingTTL(ttl uint32, timestamp uint64) int64 {
-	if ttl == Persistent {
-		return -1
-	}
-	now := c.Clock.NowMillis()
-	expirationTime := int64(timestamp) + int64(ttl)*1000
-	remaining := expirationTime - now
-	if remaining <= 0 {
-		return 0
-	}
-	return remaining / 1000
+	_ = "STUB: not implemented"
+	return 0
 }
 
 // triggerCallback invokes the expired callback if set.
 func (c *Checker) triggerCallback(bucketId uint64, key []byte, ds uint16, timestamp uint64) {
-	if c.onExpired != nil {
-		c.onExpired(bucketId, key, ds, timestamp)
-	}
+	_ = "STUB: not implemented"
+	return
 }

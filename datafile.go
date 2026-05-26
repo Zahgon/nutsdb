@@ -47,79 +47,38 @@ type DataFile struct {
 
 // NewDataFile will return a new DataFile Object.
 func NewDataFile(path string, rwManager fileio.RWManager) *DataFile {
-	dataFile := &DataFile{
-		path:      path,
-		rwManager: rwManager,
-	}
-	return dataFile
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ReadEntry returns entry at the given off(offset).
 // payloadSize = bucketSize + keySize + valueSize
 func (df *DataFile) ReadEntry(off int, payloadSize int64) (e *core.Entry, err error) {
-	size := core.MaxEntryHeaderSize + payloadSize
-	// Since core.MaxEntryHeaderSize + payloadSize may be larger than the actual entry size, it needs to be calculated
-	if int64(off)+size > df.rwManager.Size() {
-		size = df.rwManager.Size() - int64(off)
-	}
-	buf := make([]byte, size)
-
-	if _, err := df.rwManager.ReadAt(buf, int64(off)); err != nil {
-		return nil, err
-	}
-
-	e = new(core.Entry)
-	headerSize, err := e.ParseMeta(buf)
-	if err != nil {
-		return nil, err
-	}
-
-	// Remove the content after the Header
-	buf = buf[:int(headerSize+payloadSize)]
-
-	if e.IsZero() {
-		return nil, ErrEntryZero
-	}
-
-	if err := e.CheckPayloadSize(payloadSize); err != nil {
-		return nil, err
-	}
-
-	err = e.ParsePayload(buf[headerSize:])
-	if err != nil {
-		return nil, err
-	}
-
-	crc := e.GetCrc(buf[:headerSize])
-	if crc != e.Meta.Crc {
-		return nil, ErrCrc
-	}
-
-	return
+	_ = "STUB: not implemented"
+	return nil, nil
 }
+
+// Since core.MaxEntryHeaderSize + payloadSize may be larger than the actual entry size, it needs to be calculated
+
+// Remove the content after the Header
 
 // WriteAt copies data to mapped region from the b slice starting at
 // given off and returns number of bytes copied to the mapped region.
 func (df *DataFile) WriteAt(b []byte, off int64) (n int, err error) {
-	return df.rwManager.WriteAt(b, off)
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
 // Sync commits the current contents of the file to stable storage.
 // Typically, this means flushing the file system's in-memory copy
 // of recently written data to disk.
-func (df *DataFile) Sync() (err error) {
-	return df.rwManager.Sync()
-}
+func (df *DataFile) Sync() (err error) { _ = "STUB: not implemented"; return nil }
 
 // Close closes the RWManager.
 // If RWManager is FileRWManager represents closes the File,
 // rendering it unusable for I/O.
 // If RWManager is a MMapRWManager represents Unmap deletes the memory mapped region,
 // flushes any remaining changes.
-func (df *DataFile) Close() (err error) {
-	return df.rwManager.Close()
-}
+func (df *DataFile) Close() (err error) { _ = "STUB: not implemented"; return nil }
 
-func (df *DataFile) Release() (err error) {
-	return df.rwManager.Release()
-}
+func (df *DataFile) Release() (err error) { _ = "STUB: not implemented"; return nil }

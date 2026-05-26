@@ -22,86 +22,45 @@ type FileManager struct {
 
 // NewFileManager will create a NewFileManager object
 func NewFileManager(rwMode RWMode, maxFdNums int, cleanThreshold float64, segmentSize int64) (fm *FileManager) {
-	fm = &FileManager{
-		rwMode:      rwMode,
-		fdm:         fileio.NewFdm(maxFdNums, cleanThreshold),
-		segmentSize: segmentSize,
-	}
-	return fm
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetDataFile will return a DataFile Object
 func (fm *FileManager) GetDataFile(path string, capacity int64) (datafile *DataFile, err error) {
-	return fm.getDataFileWithMode(path, capacity, false)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // GetDataFileReadOnly will return a DataFile Object for read-only operations
 // This method skips file truncation to improve read performance
 func (fm *FileManager) GetDataFileReadOnly(path string, capacity int64) (datafile *DataFile, err error) {
-	return fm.getDataFileWithMode(path, capacity, true)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // getDataFileWithMode will return a DataFile Object with specified read-only mode
 func (fm *FileManager) getDataFileWithMode(path string, capacity int64, readOnly bool) (datafile *DataFile, err error) {
-	if capacity <= 0 {
-		return nil, ErrCapacity
-	}
-
-	var rwManager fileio.RWManager
-
-	if fm.rwMode == FileIO {
-		rwManager, err = fm.GetFileRWManager(path, capacity, fm.segmentSize, readOnly)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	if fm.rwMode == MMap {
-		rwManager, err = fm.GetMMapRWManager(path, capacity, fm.segmentSize, readOnly)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	return NewDataFile(path, rwManager), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func (fm *FileManager) GetDataFileByID(dir string, fileID int64, capacity int64) (*DataFile, error) {
-	path := getDataPath(fileID, dir)
-	return fm.GetDataFile(path, capacity)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // GetFileRWManager will return a FileIORWManager Object
 func (fm *FileManager) GetFileRWManager(path string, capacity int64, segmentSize int64, readOnly bool) (*fileio.FileIORWManager, error) {
-	fd, err := fm.fdm.GetFd(path)
-	if err != nil {
-		return nil, err
-	}
-	err = fileio.Truncate(path, capacity, fd, readOnly)
-	if err != nil {
-		return nil, err
-	}
-
-	return &fileio.FileIORWManager{Fd: fd, Path: path, Fdm: fm.fdm, SegmentSize: segmentSize}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // GetMMapRWManager will return a MMapRWManager Object
 func (fm *FileManager) GetMMapRWManager(path string, capacity int64, segmentSize int64, readOnly bool) (*fileio.MMapRWManager, error) {
-	fd, err := fm.fdm.GetFd(path)
-	if err != nil {
-		return nil, err
-	}
-
-	err = fileio.Truncate(path, capacity, fd, readOnly)
-	if err != nil {
-		return nil, err
-	}
-
-	return fileio.GetMMapRWManager(fd, path, fm.fdm, segmentSize), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // Close will Close fdm resource
-func (fm *FileManager) Close() error {
-	err := fm.fdm.Close()
-	return err
-}
+func (fm *FileManager) Close() error { _ = "STUB: not implemented"; return nil }

@@ -34,30 +34,14 @@ type expirationQueue struct {
 }
 
 // newExpirationQueue creates a new expiration queue with the specified buffer size.
-func newExpirationQueue(bufferSize int) *expirationQueue {
-	return &expirationQueue{
-		events: make(chan *ExpirationEvent, bufferSize),
-	}
-}
+func newExpirationQueue(bufferSize int) *expirationQueue { _ = "STUB: not implemented"; return nil }
 
 // push adds an expiration event to the queue.
 // Returns true if the event was added, false if queue is full or closed.
 func (eq *expirationQueue) push(event *ExpirationEvent) bool {
-	if eq.closed.Load() {
-		return false
-	}
-
-	select {
-	case eq.events <- event:
-		return true
-	default:
-		return false
-	}
+	_ = "STUB: not implemented"
+	return false
 }
 
 // close closes the expiration queue.
-func (eq *expirationQueue) close() {
-	if eq.closed.CompareAndSwap(false, true) {
-		close(eq.events)
-	}
-}
+func (eq *expirationQueue) close() { _ = "STUB: not implemented"; return }

@@ -1,56 +1,17 @@
 package main
 
 import (
-	"fmt"
-	"log"
-	"os"
-	"time"
-
 	"github.com/nutsdb/nutsdb"
-	"github.com/xujiajun/utils/strconv2"
 )
 
 func readWorker(id int, jobs <-chan int, results chan<- struct{}) {
-	for j := range jobs {
-		fmt.Println("readWorker", id, "started  job", j)
-		time.Sleep(time.Second)
-
-		key := strconv2.IntToStr(j)
-		if err := db.View(
-			func(tx *nutsdb.Tx) error {
-				value, err := tx.Get(bucket, []byte(key))
-				if err != nil {
-					return err
-				}
-				fmt.Println("val:", string(value))
-
-				return nil
-			}); err != nil {
-			log.Println(err)
-		}
-
-		fmt.Println("readWorker", id, "finished job", j)
-		results <- struct{}{}
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 func writeWorker(id int, jobs <-chan int, results chan<- struct{}) {
-	for j := range jobs {
-		fmt.Println("writeWorker", id, "started  job", j)
-		time.Sleep(time.Second)
-
-		key := strconv2.IntToStr(j)
-		if err := db.Update(
-			func(tx *nutsdb.Tx) error {
-				val := []byte("val" + key)
-				return tx.Put(bucket, []byte(key), val, 0)
-			}); err != nil {
-			log.Fatal(err)
-		}
-
-		fmt.Println("writeWorker", id, "finished job", j)
-		results <- struct{}{}
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 var (
@@ -59,19 +20,7 @@ var (
 	bucket string
 )
 
-func removeFileDir(fileDir string) {
-	files, _ := os.ReadDir(fileDir)
-	for _, f := range files {
-		name := f.Name()
-		if name != "" {
-			fmt.Println(fileDir + "/" + name)
-			err := os.Remove(fileDir + "/" + name)
-			if err != nil {
-				panic(err)
-			}
-		}
-	}
-}
+func removeFileDir(fileDir string) { _ = "STUB: not implemented"; return }
 
 func main() {
 	removeFlag := false
@@ -126,9 +75,4 @@ func main() {
 	}
 }
 
-func createBucket() {
-	_ = db.Update(
-		func(tx *nutsdb.Tx) error {
-			return tx.NewBucket(nutsdb.DataStructureBTree, bucket)
-		})
-}
+func createBucket() { _ = "STUB: not implemented"; return }

@@ -29,34 +29,7 @@ type Config struct {
 }
 
 // DefaultConfig returns the default TTL configuration.
-func DefaultConfig() Config {
-	return Config{
-		BatchSize:         100,
-		BatchTimeout:      1 * time.Second,
-		QueueSize:         1000,
-		EnableTimingWheel: true,
-		WheelSlotDuration: 1 * time.Second,
-		WheelSize:         3600,
-	}
-}
+func DefaultConfig() Config { _ = "STUB: not implemented"; return *new(Config) }
 
 // Validate validates the configuration and fills in defaults for zero values.
-func (c *Config) Validate() {
-	if c.BatchSize <= 0 {
-		c.BatchSize = 100
-	}
-	if c.BatchTimeout <= 0 {
-		c.BatchTimeout = 1 * time.Second
-	}
-	if c.QueueSize <= 0 {
-		c.QueueSize = 1000
-	}
-	if c.EnableTimingWheel {
-		if c.WheelSlotDuration <= 0 {
-			c.WheelSlotDuration = 1 * time.Second
-		}
-		if c.WheelSize <= 0 {
-			c.WheelSize = 3600
-		}
-	}
-}
+func (c *Config) Validate() { _ = "STUB: not implemented"; return }

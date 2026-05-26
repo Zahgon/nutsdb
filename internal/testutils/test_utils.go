@@ -14,64 +14,24 @@
 package testutils
 
 import (
-	"math/rand"
 	"testing"
-	"time"
 
 	"github.com/nutsdb/nutsdb/internal/core"
-	"github.com/stretchr/testify/require"
 )
 
 const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 func GetTestBytes(i int) []byte {
+	_ = "STUB: not implemented"
 	// Optimized version without fmt.Sprintf to reduce benchmark overhead
 	// Format: "nutsdb-000000000" (7 prefix + 9 digits = 16 bytes)
-	buf := make([]byte, 16)
-	copy(buf, "nutsdb-")
-
-	// Convert i to 9-digit string with leading zeros
-	for j := 15; j >= 7; j-- {
-		buf[j] = byte('0' + i%10)
-		i /= 10
-	}
-	return buf
+	return nil
 }
 
-func GetRandomBytes(length int) []byte {
-	b := make([]byte, length)
-	for i := range b {
-		b[i] = charset[rand.Intn(len(charset))]
-	}
-	return b
-}
+// Convert i to 9-digit string with leading zeros
 
-func AssertErr(t *testing.T, err error, expectErr error) {
-	if expectErr != nil {
-		require.Equal(t, expectErr, err)
-	} else {
-		require.NoError(t, err)
-	}
-}
+func GetRandomBytes(length int) []byte { _ = "STUB: not implemented"; return nil }
 
-func GenerateRecords(count int) []*core.Record {
-	rand.Seed(time.Now().UnixNano())
-	records := make([]*core.Record, count)
-	for i := 0; i < count; i++ {
-		key := GetTestBytes(i)
-		val := GetRandomBytes(24)
+func AssertErr(t *testing.T, err error, expectErr error) { _ = "STUB: not implemented"; return }
 
-		record := &core.Record{
-			Key:       key,
-			Value:     val,
-			FileID:    int64(i),
-			DataPos:   uint64(rand.Uint32()),
-			ValueSize: uint32(len(val)),
-			Timestamp: uint64(time.Now().Unix()),
-			TTL:       uint32(rand.Intn(3600)),
-			TxID:      uint64(rand.Intn(1000)),
-		}
-		records[i] = record
-	}
-	return records
-}
+func GenerateRecords(count int) []*core.Record { _ = "STUB: not implemented"; return nil }

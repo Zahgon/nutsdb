@@ -38,151 +38,50 @@ type Service struct {
 }
 
 func NewService(clk Clock, config Config, callback BatchExpiredCallback) *Service {
-	config.Validate()
-
-	chk := NewChecker(clk)
-	queue := newExpirationQueue(config.QueueSize)
-
-	var wheelManager *TimingWheelManager
-	if config.EnableTimingWheel {
-		wheelManager = NewTimingWheelManager(config, queue)
-	}
-
-	service := &Service{
-		checker:         chk,
-		clock:           clk,
-		expiredCallback: callback,
-		queue:           queue,
-		batchSize:       config.BatchSize,
-		batchTimeout:    config.BatchTimeout,
-		wheelManager:    wheelManager,
-	}
-
-	chk.SetExpiredCallback(func(bucketId uint64, key []byte, ds uint16, timestamp uint64) {
-		service.onExpired(bucketId, key, ds, timestamp)
-	})
-
-	return service
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NowMillis returns the current time in milliseconds via the internal clock.
 // This facade method avoids exposing the Clock hierarchy to callers.
-func (s *Service) NowMillis() int64 {
-	return s.clock.NowMillis()
-}
+func (s *Service) NowMillis() int64 { _ = "STUB: not implemented"; return 0 }
 
 // NowSeconds returns the current time in seconds via the internal clock.
 // This facade method avoids exposing the Clock hierarchy to callers.
-func (s *Service) NowSeconds() int64 {
-	return s.clock.NowSeconds()
-}
+func (s *Service) NowSeconds() int64 { _ = "STUB: not implemented"; return 0 }
 
 // IsExpired checks whether a record is expired via the internal checker.
 // This facade method avoids exposing the Checker hierarchy to callers.
 func (s *Service) IsExpired(ttl uint32, timestamp uint64) bool {
-	return s.checker.IsExpired(ttl, timestamp)
+	_ = "STUB: not implemented"
+	return false
 }
 
 // GetChecker returns the internal checker.
 // Internal use only for internal data structures.
 // Deprecated: root package code should use Service.IsExpired instead.
 func (s *Service) GetChecker() *Checker {
-	return s.checker
-}
+	_ = "STUB: not implemented"
 
-// SetClock updates the service clock and propagates it to the checker.
-// Intended for tests that need deterministic time control.
-func (s *Service) SetClock(clk Clock) {
-	s.clock = clk
-	if s.checker != nil {
-		s.checker.SetClock(clk)
-	}
-}
-
-func (s *Service) onExpired(bucketId uint64, key []byte, ds uint16, timestamp uint64) {
-	event := &ExpirationEvent{
-		BucketId:  bucketId,
-		Key:       key,
-		Ds:        ds,
-		Timestamp: timestamp,
-	}
-	s.queue.push(event)
-}
-
-func (s *Service) processExpirationEvents(ctx context.Context) {
-	batch := make([]*ExpirationEvent, 0, s.batchSize)
-	timer := time.NewTimer(s.batchTimeout)
-	defer timer.Stop()
-
-	flushBatch := func() {
-		if len(batch) > 0 && s.expiredCallback != nil {
-			s.expiredCallback(batch)
-		}
-		batch = batch[:0]
-	}
-
-	for {
-		select {
-		case <-ctx.Done():
-			flushBatch()
-			return
-
-		case event, ok := <-s.queue.events:
-			if !ok {
-				flushBatch()
-				return
-			}
-
-			batch = append(batch, event)
-
-			if len(batch) >= s.batchSize {
-				flushBatch()
-				if !timer.Stop() {
-					select {
-					case <-timer.C:
-					default:
-					}
-				}
-				timer.Reset(s.batchTimeout)
-			}
-
-		case <-timer.C:
-			flushBatch()
-			timer.Reset(s.batchTimeout)
-		}
-	}
-}
-
-func (s *Service) Start(ctx context.Context) error {
-	if err := s.lifecycle.Start(ctx); err != nil {
-		return err
-	}
-
-	s.lifecycle.Go(s.processExpirationEvents)
-
-	if s.wheelManager != nil {
-		if err := s.wheelManager.Start(ctx); err != nil {
-			return err
-		}
-	}
-
+	// SetClock updates the service clock and propagates it to the checker.
+	// Intended for tests that need deterministic time control.
 	return nil
 }
 
-func (s *Service) Stop(timeout time.Duration) error {
-	if s.wheelManager != nil {
-		if err := s.wheelManager.Stop(timeout); err != nil {
-			return err
-		}
-	}
+func (s *Service) SetClock(clk Clock) { _ = "STUB: not implemented"; return }
 
-	s.queue.close()
-	return s.lifecycle.Stop(timeout)
+func (s *Service) onExpired(bucketId uint64, key []byte, ds uint16, timestamp uint64) {
+	_ = "STUB: not implemented"
+	return
 }
 
-func (s *Service) Name() string {
-	return "TTLService"
-}
+func (s *Service) processExpirationEvents(ctx context.Context) { _ = "STUB: not implemented"; return }
+
+func (s *Service) Start(ctx context.Context) error { _ = "STUB: not implemented"; return nil }
+
+func (s *Service) Stop(timeout time.Duration) error { _ = "STUB: not implemented"; return nil }
+
+func (s *Service) Name() string { _ = "STUB: not implemented"; return "" }
 
 // RegisterKeyForActiveExpiration registers a key in the timing wheel for active expiration.
 // Should be called when a key with TTL is written to the database.
@@ -194,16 +93,14 @@ func (s *Service) RegisterKeyForActiveExpiration(
 	ttl uint32,
 	timestamp uint64,
 ) {
-	if s.wheelManager != nil {
-		s.wheelManager.RegisterKey(bucketId, key, ds, ttl, timestamp)
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 // DeregisterKeyFromActiveExpiration removes a key from the timing wheel.
 // Should be called when a key is deleted before expiration or its TTL is updated.
 // If the timing wheel is disabled, this is a no-op.
 func (s *Service) DeregisterKeyFromActiveExpiration(bucketId uint64, key []byte) {
-	if s.wheelManager != nil {
-		s.wheelManager.DeregisterKey(bucketId, key)
-	}
+	_ = "STUB: not implemented"
+	return
 }

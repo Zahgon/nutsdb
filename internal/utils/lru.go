@@ -14,94 +14,25 @@ type LRUCache struct {
 }
 
 // New creates a new LRUCache with the specified capacity.
-func NewLruCache(cap int) *LRUCache {
-	return &LRUCache{
-		m:   make(map[any]*list.Element),
-		l:   list.New(),
-		cap: cap,
-		mu:  &sync.RWMutex{},
-	}
-}
+func NewLruCache(cap int) *LRUCache { _ = "STUB: not implemented"; return nil }
 
 // Add adds a new entry to the cache.
-func (c *LRUCache) Add(key any, value any) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-
-	if c.cap <= 0 {
-		return
-	}
-
-	if c.l.Len() >= c.cap {
-		c.removeOldest()
-	}
-
-	e := &LruEntry{
-		Key:   key,
-		Value: value,
-	}
-	entry := c.l.PushFront(e)
-
-	c.m[key] = entry
-}
+func (c *LRUCache) Add(key any, value any) { _ = "STUB: not implemented"; return }
 
 // Get returns the entry associated with the given key, or nil if the key is not in the cache.
-func (c *LRUCache) Get(key any) any {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-
-	entry, ok := c.m[key]
-	if !ok {
-		return nil
-	}
-
-	c.l.MoveToFront(entry)
-	return entry.Value.(*LruEntry).Value
-}
+func (c *LRUCache) Get(key any) any { _ = "STUB: not implemented"; return *new(any) }
 
 // Remove removes the entry associated with the given key from the cache.
-func (c *LRUCache) Remove(key any) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-
-	entry, ok := c.m[key]
-	if !ok {
-		return
-	}
-
-	c.l.Remove(entry)
-	delete(c.m, key)
-}
+func (c *LRUCache) Remove(key any) { _ = "STUB: not implemented"; return }
 
 // Len returns the number of entries in the cache.
-func (c *LRUCache) Len() int {
-	c.mu.RLock()
-	defer c.mu.RUnlock()
-
-	return c.l.Len()
-}
+func (c *LRUCache) Len() int { _ = "STUB: not implemented"; return 0 }
 
 // Clear clears the cache.
-func (c *LRUCache) Clear() {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-
-	c.l.Init()
-	c.m = make(map[any]*list.Element)
-}
+func (c *LRUCache) Clear() { _ = "STUB: not implemented"; return }
 
 // removeOldest removes the oldest entry from the cache.
-func (c *LRUCache) removeOldest() {
-	entry := c.l.Back()
-	if entry == nil {
-		return
-	}
-
-	key := entry.Value.(*LruEntry).Key
-	delete(c.m, key)
-
-	c.l.Remove(entry)
-}
+func (c *LRUCache) removeOldest() { _ = "STUB: not implemented"; return }
 
 // LruEntry is a struct that represents an entry in the LRU cache.
 type LruEntry struct {

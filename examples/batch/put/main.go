@@ -23,12 +23,7 @@ func init() {
 	)
 }
 
-func createBucket() {
-	_ = db.Update(
-		func(tx *nutsdb.Tx) error {
-			return tx.NewBucket(nutsdb.DataStructureBTree, "bucket1")
-		})
-}
+func createBucket() { _ = "STUB: not implemented"; return }
 
 func main() {
 	time2.Start()

@@ -54,14 +54,4 @@ func main() {
 	iterateBuckets()
 }
 
-func iterateBuckets() {
-	if err := db.View(
-		func(tx *nutsdb.Tx) error {
-			return tx.IterateBuckets(nutsdb.DataStructureBTree, "*", func(bucket string) bool {
-				fmt.Println("bucket: ", bucket)
-				return true
-			})
-		}); err != nil {
-		log.Fatal(err)
-	}
-}
+func iterateBuckets() { _ = "STUB: not implemented"; return }

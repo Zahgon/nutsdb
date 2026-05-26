@@ -74,108 +74,60 @@ type componentError struct {
 }
 
 func (e *componentError) Error() string {
-	return e.msg
+	_ = "STUB: not implemented"
+
+	// Start initializes the component lifecycle with the given parent context.
+	// Returns ErrAlreadyStarted if the component has already been started.
+	// Returns ErrAlreadyStopped if the component has already been stopped.
+	return ""
 }
 
-// Start initializes the component lifecycle with the given parent context.
-// Returns ErrAlreadyStarted if the component has already been started.
-// Returns ErrAlreadyStopped if the component has already been stopped.
 func (cl *ComponentLifecycle) Start(parentCtx context.Context) error {
-	cl.mu.Lock()
-	defer cl.mu.Unlock()
-
-	// Check stopped first to handle start-after-stop case
-	if cl.stopped.Load() {
-		return ErrAlreadyStopped
-	}
-
-	if cl.started.Load() {
-		return ErrAlreadyStarted
-	}
-
-	// Create child context from parent
-	cl.ctx, cl.cancel = context.WithCancel(parentCtx)
-	cl.started.Store(true)
-
+	_ = "STUB: not implemented"
 	return nil
 }
+
+// Check stopped first to handle start-after-stop case
+
+// Create child context from parent
 
 // Stop stops the component and waits for all goroutines to finish.
 // It is idempotent - calling Stop() multiple times is safe.
 // Returns ErrStopTimeout if goroutines don't finish within the timeout.
 func (cl *ComponentLifecycle) Stop(timeout time.Duration) error {
-	cl.mu.Lock()
+	_ = "STUB: not implemented"
 
 	// Idempotent check - if already stopped, return nil
-	if cl.stopped.Load() {
-		cl.mu.Unlock()
-		return nil
-	}
-
-	// Mark as stopped
-	cl.stopped.Store(true)
-
-	// Cancel context to signal goroutines
-	if cl.cancel != nil {
-		cl.cancel()
-	}
-
-	cl.mu.Unlock()
-
-	// Wait for all goroutines with timeout
-	done := make(chan struct{})
-	go func() {
-		cl.wg.Wait()
-		close(done)
-	}()
-
-	select {
-	case <-done:
-		return nil
-	case <-time.After(timeout):
-		return ErrStopTimeout
-	}
+	return nil
 }
+
+// Mark as stopped
+
+// Cancel context to signal goroutines
+
+// Wait for all goroutines with timeout
 
 // Go starts a goroutine managed by the lifecycle.
 // The goroutine will receive the component's context and should respect cancellation.
 // Panics in the goroutine are recovered and logged.
-func (cl *ComponentLifecycle) Go(fn func(ctx context.Context)) {
-	cl.wg.Add(1)
-	go func() {
-		defer func() {
-			if r := recover(); r != nil {
-				_ = r
-			}
-			cl.wg.Done()
-		}()
-		fn(cl.ctx)
-	}()
-}
+func (cl *ComponentLifecycle) Go(fn func(ctx context.Context)) { _ = "STUB: not implemented"; return }
 
 // Context returns the component's context.
 // This context is canceled when Stop() is called or when the parent context is canceled.
 func (cl *ComponentLifecycle) Context() context.Context {
-	return cl.ctx
+	_ = "STUB: not implemented"
+
+	// IsRunning returns true if the component is currently running.
+	return *new(context.Context)
 }
 
-// IsRunning returns true if the component is currently running.
-func (cl *ComponentLifecycle) IsRunning() bool {
-	return cl.started.Load() && !cl.stopped.Load()
-}
+func (cl *ComponentLifecycle) IsRunning() bool { _ = "STUB: not implemented"; return false }
 
 // IsStopped returns true if the component has been stopped.
-func (cl *ComponentLifecycle) IsStopped() bool {
-	return cl.stopped.Load()
-}
+func (cl *ComponentLifecycle) IsStopped() bool { _ = "STUB: not implemented"; return false }
 
 // GetState returns the current state of the component.
 func (cl *ComponentLifecycle) GetState() ComponentState {
-	if cl.stopped.Load() {
-		return ComponentStateStopped
-	}
-	if cl.started.Load() {
-		return ComponentStateRunning
-	}
-	return ComponentStateCreated
+	_ = "STUB: not implemented"
+	return *new(ComponentState)
 }

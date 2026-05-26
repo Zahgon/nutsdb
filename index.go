@@ -28,32 +28,20 @@ type defaultOp[T IndexType] struct {
 }
 
 func (op *defaultOp[T]) computeIfAbsent(id core.BucketId, f func() *T) *T {
-	if i, isExist := op.Idx[id]; isExist {
-		return i
-	}
-	i := f()
-	op.Idx[id] = i
-	return i
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (op *defaultOp[T]) delete(id core.BucketId) {
-	delete(op.Idx, id)
-}
+func (op *defaultOp[T]) delete(id core.BucketId) { _ = "STUB: not implemented"; return }
 
 func (op *defaultOp[T]) exist(id core.BucketId) (*T, bool) {
-	i, isExist := op.Idx[id]
-	return i, isExist
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
-func (op *defaultOp[T]) getIdxLen() int {
-	return len(op.Idx)
-}
+func (op *defaultOp[T]) getIdxLen() int { _ = "STUB: not implemented"; return 0 }
 
-func (op *defaultOp[T]) rangeIdx(f func(elem *T)) {
-	for _, t := range op.Idx {
-		f(t)
-	}
-}
+func (op *defaultOp[T]) rangeIdx(f func(elem *T)) { _ = "STUB: not implemented"; return }
 
 type Index struct {
 	List      *ListIndex
@@ -63,14 +51,7 @@ type Index struct {
 	db        *DB
 }
 
-func (db *DB) newIndex() *Index {
-	i := &Index{db: db}
-	i.List = &ListIndex{defaultOp: &defaultOp[data.List]{Idx: map[core.BucketId]*data.List{}}, index: i}
-	i.BTree = &BTreeIndex{defaultOp: &defaultOp[data.BTree]{Idx: map[core.BucketId]*data.BTree{}}, index: i}
-	i.Set = &SetIndex{defaultOp: &defaultOp[data.Set]{Idx: map[core.BucketId]*data.Set{}}, index: i}
-	i.SortedSet = &SortedSetIndex{defaultOp: &defaultOp[SortedSet]{Idx: map[core.BucketId]*SortedSet{}}, index: i}
-	return i
-}
+func (db *DB) newIndex() *Index { _ = "STUB: not implemented"; return nil }
 
 type ListIndex struct {
 	*defaultOp[data.List]
@@ -78,9 +59,8 @@ type ListIndex struct {
 }
 
 func (idx *ListIndex) GetWithDefault(id core.BucketId) *data.List {
-	return idx.computeIfAbsent(id, func() *data.List {
-		return data.NewList(idx.index.db.opt.ListImpl.toInternal())
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 type BTreeIndex struct {
@@ -89,9 +69,8 @@ type BTreeIndex struct {
 }
 
 func (idx *BTreeIndex) GetWithDefault(id core.BucketId) *data.BTree {
-	return idx.computeIfAbsent(id, func() *data.BTree {
-		return data.NewBTree(id, idx.index.db.ttlService.GetChecker())
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 type SetIndex struct {
@@ -100,9 +79,8 @@ type SetIndex struct {
 }
 
 func (idx *SetIndex) GetWithDefault(id core.BucketId) *data.Set {
-	return idx.computeIfAbsent(id, func() *data.Set {
-		return data.NewSet()
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 type SortedSetIndex struct {
@@ -111,7 +89,6 @@ type SortedSetIndex struct {
 }
 
 func (idx *SortedSetIndex) GetWithDefault(id core.BucketId) *SortedSet {
-	return idx.computeIfAbsent(id, func() *SortedSet {
-		return NewSortedSet(idx.index.db)
-	})
+	_ = "STUB: not implemented"
+	return nil
 }

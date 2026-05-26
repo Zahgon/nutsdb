@@ -15,15 +15,8 @@
 package nutsdb
 
 import (
-	"bytes"
-	"sort"
-	"strings"
-	"time"
-
 	"github.com/nutsdb/nutsdb/internal/data"
-	"github.com/nutsdb/nutsdb/internal/utils"
 	"github.com/pkg/errors"
-	"github.com/xujiajun/utils/strconv2"
 )
 
 // SeparatorForListKey represents separator for listKey
@@ -48,60 +41,19 @@ var (
 
 // RPop removes and returns the last element of the list stored in the bucket at given bucket and key.
 func (tx *Tx) RPop(bucket string, key []byte) (item []byte, err error) {
-	item, err = tx.RPeek(bucket, key)
-	if err != nil {
-		return
-	}
-
-	return item, tx.push(bucket, key, DataRPopFlag, item)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // RPeek returns the last element of the list stored in the bucket at given bucket and key.
 func (tx *Tx) RPeek(bucket string, key []byte) ([]byte, error) {
-	if err := tx.checkTxIsClosed(); err != nil {
-		return nil, err
-	}
-
-	b, err := tx.db.bucketMgr.GetBucket(DataStructureList, bucket)
-	if err != nil {
-		return nil, err
-	}
-	var (
-		bucketId = b.Id
-		l        *data.List
-		exist    bool
-	)
-
-	if l, exist = tx.db.Index.List.exist(bucketId); !exist {
-		return nil, ErrBucket
-	}
-
-	if tx.CheckExpire(bucket, key) {
-		return nil, ErrListNotFound
-	}
-
-	item, err := l.RPeek(string(key))
-	if err != nil {
-		return nil, err
-	}
-
-	v, err := tx.db.getValueByRecord(item.Record)
-	if err != nil {
-		return nil, err
-	}
-
-	return v, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // push sets values for list stored in the bucket at given bucket, key, flag and values.
 func (tx *Tx) push(bucket string, key []byte, flag uint16, values ...[]byte) error {
-	for _, value := range values {
-		err := tx.put(bucket, key, value, Persistent, flag, uint64(time.Now().Unix()), DataStructureList)
-		if err != nil {
-			return err
-		}
-	}
-
+	_ = "STUB: not implemented"
 	return nil
 }
 
@@ -109,163 +61,52 @@ func (tx *Tx) push(bucket string, key []byte, flag uint16, values ...[]byte) err
 // this function will get list, if list not exists, will create
 // a new one.
 func (tx *Tx) getListWithDefault(bucket string) (*data.List, error) {
-	b, err := tx.db.bucketMgr.GetBucket(DataStructureList, bucket)
-	if err != nil {
-		return nil, err
-	}
-	bucketId := b.Id
-
-	// Ensure the list index exists before performing list operations
-	return tx.db.Index.List.GetWithDefault(bucketId), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
+
+// Ensure the list index exists before performing list operations
 
 // RPush inserts the values at the tail of the list stored in the bucket at given bucket,key and values.
 func (tx *Tx) RPush(bucket string, key []byte, values ...[]byte) error {
-	if err := tx.isKeyValid(bucket, key); err != nil {
-		return err
-	}
-
-	if strings.Contains(string(key), SeparatorForListKey) {
-		return ErrSeparatorForListKey
-	}
-
-	for _, value := range values {
-		l, err := tx.getListWithDefault(bucket)
-		if err != nil {
-			return err
-		}
-		newKey := l.GeneratePushKey(key, false)
-		err = tx.push(bucket, newKey, DataRPushFlag, value)
-		if err != nil {
-			return err
-		}
-	}
-
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // LPush inserts the values at the head of the list stored in the bucket at given bucket,key and values.
 func (tx *Tx) LPush(bucket string, key []byte, values ...[]byte) error {
-	if err := tx.isKeyValid(bucket, key); err != nil {
-		return err
-	}
-
-	if strings.Contains(string(key), SeparatorForListKey) {
-		return ErrSeparatorForListKey
-	}
-
-	for _, value := range values {
-		l, err := tx.getListWithDefault(bucket)
-		if err != nil {
-			return err
-		}
-		newKey := l.GeneratePushKey(key, true)
-		err = tx.push(bucket, newKey, DataLPushFlag, value)
-		if err != nil {
-			return err
-		}
-	}
-
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func (tx *Tx) isKeyValid(bucket string, key []byte) error {
-	if err := tx.checkTxIsClosed(); err != nil {
-		return err
-	}
-
-	if tx.CheckExpire(bucket, key) {
-		return ErrListNotFound
-	}
-
-	return nil
-}
+func (tx *Tx) isKeyValid(bucket string, key []byte) error { _ = "STUB: not implemented"; return nil }
 
 func (tx *Tx) LPushRaw(bucket string, key []byte, values ...[]byte) error {
-	if err := tx.isKeyValid(bucket, key); err != nil {
-		return err
-	}
-
-	return tx.push(bucket, key, DataLPushFlag, values...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (tx *Tx) RPushRaw(bucket string, key []byte, values ...[]byte) error {
-	if err := tx.isKeyValid(bucket, key); err != nil {
-		return err
-	}
-
-	return tx.push(bucket, key, DataRPushFlag, values...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // LPop removes and returns the first element of the list stored in the bucket at given bucket and key.
 func (tx *Tx) LPop(bucket string, key []byte) (item []byte, err error) {
-	item, err = tx.LPeek(bucket, key)
-	if err != nil {
-		return
-	}
-
-	return item, tx.push(bucket, key, DataLPopFlag, item)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // LPeek returns the first element of the list stored in the bucket at given bucket and key.
 func (tx *Tx) LPeek(bucket string, key []byte) (item []byte, err error) {
-	if err := tx.checkTxIsClosed(); err != nil {
-		return nil, err
-	}
-
-	b, err := tx.db.bucketMgr.GetBucket(DataStructureList, bucket)
-	if err != nil {
-		return nil, err
-	}
-	var (
-		bucketId = b.Id
-		l        *data.List
-		exist    bool
-	)
-
-	if l, exist = tx.db.Index.List.exist(bucketId); !exist {
-		return nil, ErrBucket
-	}
-	if tx.CheckExpire(bucket, key) {
-		return nil, ErrListNotFound
-	}
-	r, err := l.LPeek(string(key))
-	if err != nil {
-		return nil, err
-	}
-
-	v, err := tx.db.getValueByRecord(r.Record)
-	if err != nil {
-		return nil, err
-	}
-
-	return v, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // LSize returns the size of key in the bucket in the bucket at given bucket and key.
 func (tx *Tx) LSize(bucket string, key []byte) (int, error) {
-	if err := tx.checkTxIsClosed(); err != nil {
-		return 0, err
-	}
-
-	b, err := tx.db.bucketMgr.GetBucket(DataStructureList, bucket)
-	if err != nil {
-		return 0, err
-	}
-
-	var (
-		bucketId = b.Id
-		l        *data.List
-		exist    bool
-	)
-
-	if l, exist = tx.db.Index.List.exist(bucketId); !exist {
-		return 0, ErrBucket
-	}
-	if tx.CheckExpire(bucket, key) {
-		return 0, ErrListNotFound
-	}
-	return l.Size(string(key))
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
 // LRange returns the specified elements of the list stored in the bucket at given bucket,key, start and end.
@@ -274,43 +115,8 @@ func (tx *Tx) LSize(bucket string, key []byte) (int, error) {
 // Start and end can also be negative numbers indicating offsets from the end of the list,
 // where -1 is the last element of the list, -2 the penultimate element and so on.
 func (tx *Tx) LRange(bucket string, key []byte, start, end int) ([][]byte, error) {
-	if err := tx.checkTxIsClosed(); err != nil {
-		return nil, err
-	}
-
-	b, err := tx.db.bucketMgr.GetBucket(DataStructureList, bucket)
-	if err != nil {
-		return nil, err
-	}
-	var (
-		bucketId = b.Id
-		l        *data.List
-		exist    bool
-	)
-
-	if l, exist = tx.db.Index.List.exist(bucketId); !exist {
-		return nil, ErrBucket
-	}
-	if tx.CheckExpire(bucket, key) {
-		return nil, ErrListNotFound
-	}
-
-	records, err := l.LRange(string(key), start, end)
-	if err != nil {
-		return nil, err
-	}
-
-	values := make([][]byte, len(records))
-
-	for i, r := range records {
-		value, err := tx.db.getValueByRecord(r)
-		if err != nil {
-			return nil, err
-		}
-		values[i] = value
-	}
-
-	return values, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // LRem removes the first count occurrences of elements equal to value from the list stored in the bucket at given bucket,key,count.
@@ -319,29 +125,7 @@ func (tx *Tx) LRange(bucket string, key []byte, start, end int) ([][]byte, error
 // count < 0: Remove elements equal to value moving from tail to head.
 // count = 0: Remove all elements equal to value.
 func (tx *Tx) LRem(bucket string, key []byte, count int, value []byte) error {
-	var (
-		buffer bytes.Buffer
-		size   int
-	)
-	size, err := tx.LSize(bucket, key)
-	if err != nil {
-		return err
-	}
-
-	if count > size || count < -size {
-		return ErrCount
-	}
-
-	buffer.Write([]byte(strconv2.IntToStr(count)))
-	buffer.Write([]byte(SeparatorForListKey))
-	buffer.Write(value)
-	newValue := buffer.Bytes()
-
-	err = tx.push(bucket, key, DataLRemFlag, newValue)
-	if err != nil {
-		return err
-	}
-
+	_ = "STUB: not implemented"
 	return nil
 }
 
@@ -351,182 +135,30 @@ func (tx *Tx) LRem(bucket string, key []byte, count int, value []byte) error {
 // start and end can also be negative numbers indicating offsets from the end of the list,
 // where -1 is the last element of the list, -2 the penultimate element and so on.
 func (tx *Tx) LTrim(bucket string, key []byte, start, end int) error {
-	var (
-		err    error
-		buffer bytes.Buffer
-	)
-
-	if err = tx.checkTxIsClosed(); err != nil {
-		return err
-	}
-
-	b, err := tx.db.bucketMgr.GetBucket(DataStructureList, bucket)
-	if err != nil {
-		return err
-	}
-
-	var (
-		bucketId = b.Id
-		l        *data.List
-		exist    bool
-	)
-
-	if l, exist = tx.db.Index.List.exist(bucketId); !exist {
-		return ErrBucket
-	}
-
-	if tx.CheckExpire(bucket, key) {
-		return ErrListNotFound
-	}
-	if _, ok := l.Items[string(key)]; !ok {
-		return ErrListNotFound
-	}
-
-	if _, err := tx.LRange(bucket, key, start, end); err != nil {
-		return err
-	}
-
-	buffer.Write(key)
-	buffer.Write([]byte(SeparatorForListKey))
-	buffer.Write([]byte(strconv2.IntToStr(start)))
-	newKey := buffer.Bytes()
-
-	return tx.push(bucket, newKey, DataLTrimFlag, []byte(strconv2.IntToStr(end)))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // LRemByIndex remove the list element at specified index
 func (tx *Tx) LRemByIndex(bucket string, key []byte, indexes ...int) error {
-	if err := tx.checkTxIsClosed(); err != nil {
-		return err
-	}
-
-	b, err := tx.db.bucketMgr.GetBucket(DataStructureList, bucket)
-	if err != nil {
-		return err
-	}
-	bucketId := b.Id
-	if _, ok := tx.db.Index.List.exist(bucketId); !ok {
-		return ErrListNotFound
-	}
-
-	if tx.CheckExpire(bucket, key) {
-		return ErrListNotFound
-	}
-
-	if len(indexes) == 0 {
-		return nil
-	}
-
-	sort.Ints(indexes)
-	data, err := utils.MarshalInts(indexes)
-	if err != nil {
-		return err
-	}
-
-	err = tx.push(bucket, key, DataLRemByIndex, data)
-	if err != nil {
-		return err
-	}
-
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // LKeys find all keys matching a given pattern
 func (tx *Tx) LKeys(bucket, pattern string, f func(key string) bool) error {
-	if err := tx.checkTxIsClosed(); err != nil {
-		return err
-	}
-	b, err := tx.db.bucketMgr.GetBucket(DataStructureList, bucket)
-	if err != nil {
-		return err
-	}
-	var (
-		bucketId = b.Id
-		l        *data.List
-		exist    bool
-	)
-	if l, exist = tx.db.Index.List.exist(bucketId); !exist {
-		return ErrBucket
-	}
-
-	for key := range l.Items {
-		if tx.CheckExpire(bucket, []byte(key)) {
-			continue
-		}
-		if end, err := utils.MatchForRange(pattern, key, f); end || err != nil {
-			return err
-		}
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (tx *Tx) ExpireList(bucket string, key []byte, ttl uint32) error {
-	if err := tx.checkTxIsClosed(); err != nil {
-		return err
-	}
-	b, err := tx.db.bucketMgr.GetBucket(DataStructureList, bucket)
-	if err != nil {
-		return err
-	}
-
-	var (
-		bucketId = b.Id
-		l        *data.List
-		exist    bool
-	)
-
-	if l, exist = tx.db.Index.List.exist(bucketId); !exist {
-		return ErrBucket
-	}
-
-	l.ExpireList(key, ttl)
-	ttls := strconv2.Int64ToStr(int64(ttl))
-	err = tx.push(bucket, key, DataExpireListFlag, []byte(ttls))
-	if err != nil {
-		return err
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func (tx *Tx) CheckExpire(bucket string, key []byte) bool {
-	b, err := tx.db.bucketMgr.GetBucket(DataStructureList, bucket)
-	if err != nil {
-		return false
-	}
-
-	var (
-		bucketId = b.Id
-		l        *data.List
-		exist    bool
-	)
-
-	if l, exist = tx.db.Index.List.exist(bucketId); !exist {
-		return false
-	}
-
-	if l.IsExpire(string(key)) {
-		_ = tx.push(bucket, key, DataDeleteFlag)
-		return true
-	}
-	return false
-}
+func (tx *Tx) CheckExpire(bucket string, key []byte) bool { _ = "STUB: not implemented"; return false }
 
 func (tx *Tx) GetListTTL(bucket string, key []byte) (uint32, error) {
-	if err := tx.checkTxIsClosed(); err != nil {
-		return 0, err
-	}
-	b, err := tx.db.bucketMgr.GetBucket(DataStructureList, bucket)
-	if err != nil {
-		return 0, err
-	}
-
-	var (
-		bucketId = b.Id
-		l        *data.List
-		exist    bool
-	)
-	if l, exist = tx.db.Index.List.exist(bucketId); !exist {
-		return 0, ErrBucket
-	}
-	return l.GetListTTL(string(key))
+	_ = "STUB: not implemented"
+	return 0, nil
 }

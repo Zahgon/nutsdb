@@ -1,9 +1,7 @@
 package core
 
 import (
-	"encoding/binary"
 	"errors"
-	"hash/crc32"
 
 	"github.com/nutsdb/nutsdb/internal/utils"
 )
@@ -59,55 +57,23 @@ type Bucket struct {
 }
 
 // Decode : CRC | op | size
-func (meta *BucketMeta) Decode(bytes []byte) {
-	_ = bytes[BucketMetaSize-1]
-	crc := binary.LittleEndian.Uint32(bytes[:4])
-	op := binary.LittleEndian.Uint16(bytes[4:6])
-	size := binary.LittleEndian.Uint32(bytes[6:10])
-	meta.Crc = crc
-	meta.Size = size
-	meta.Op = BucketOperation(op)
-}
+func (meta *BucketMeta) Decode(bytes []byte) { _ = "STUB: not implemented"; return }
 
 // Encode : Meta | BucketId | Ds | BucketName
-func (b *Bucket) Encode() []byte {
-	entrySize := b.GetEntrySize()
-	buf := make([]byte, entrySize)
-	b.Meta.Size = uint32(b.GetPayloadSize())
-	binary.LittleEndian.PutUint16(buf[4:6], uint16(b.Meta.Op))
-	binary.LittleEndian.PutUint32(buf[6:10], b.Meta.Size)
-	binary.LittleEndian.PutUint64(buf[BucketMetaSize:BucketMetaSize+IdSize], uint64(b.Id))
-	binary.LittleEndian.PutUint16(buf[BucketMetaSize+IdSize:BucketMetaSize+IdSize+DsSize], uint16(b.Ds))
-	copy(buf[BucketMetaSize+IdSize+DsSize:], b.Name)
-	c32 := crc32.ChecksumIEEE(buf[4:])
-	b.Meta.Crc = c32
-	binary.LittleEndian.PutUint32(buf[0:4], c32)
-
-	return buf
-}
+func (b *Bucket) Encode() []byte { _ = "STUB: not implemented"; return nil }
 
 // Decode : Meta | BucketId | Ds | BucketName
 func (b *Bucket) Decode(bytes []byte) error {
+	_ = "STUB: not implemented"
 	// parse the payload
-	id := binary.LittleEndian.Uint64(bytes[:IdSize])
-	ds := binary.LittleEndian.Uint16(bytes[IdSize : IdSize+DsSize])
-	name := bytes[IdSize+DsSize:]
-	b.Id = id
-	b.Name = string(name)
-	b.Ds = ds
 	return nil
 }
 
-func (b *Bucket) GetEntrySize() int {
-	return int(BucketMetaSize) + b.GetPayloadSize()
-}
+func (b *Bucket) GetEntrySize() int { _ = "STUB: not implemented"; return 0 }
 
 func (b *Bucket) GetCRC(headerBuf []byte, dataBuf []byte) uint32 {
-	crc := crc32.ChecksumIEEE(headerBuf[4:])
-	crc = crc32.Update(crc, crc32.IEEETable, dataBuf)
-	return crc
+	_ = "STUB: not implemented"
+	return 0
 }
 
-func (b *Bucket) GetPayloadSize() int {
-	return IdSize + DsSize + len(b.Name)
-}
+func (b *Bucket) GetPayloadSize() int { _ = "STUB: not implemented"; return 0 }

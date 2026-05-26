@@ -21,80 +21,16 @@ type HintCollector struct {
 }
 
 func NewHintCollector(fileID int64, writer hintWriter, flushEvery int) *HintCollector {
-	if flushEvery <= 0 {
-		flushEvery = DefaultHintCollectorFlushEvery
-	}
-	return &HintCollector{
-		writer:     writer,
-		buf:        make([]HintEntry, 0, flushEvery),
-		fileID:     fileID,
-		flushEvery: flushEvery,
-	}
-}
-
-func (hc *HintCollector) Add(entry *HintEntry) error {
-	if hc.closed {
-		return errHintCollectorClosed
-	}
-	if entry == nil {
-		return ErrHintFileEntryInvalid
-	}
-	clone := *entry
-	clone.FileID = hc.fileID
-	if len(entry.Key) > 0 {
-		clone.Key = append([]byte(nil), entry.Key...)
-	}
-	hc.buf = append(hc.buf, clone)
-	if len(hc.buf) >= hc.flushEvery {
-		return hc.flush(true)
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func (hc *HintCollector) Flush() error {
-	if hc.closed {
-		return errHintCollectorClosed
-	}
-	return hc.flush(true)
-}
+func (hc *HintCollector) Add(entry *HintEntry) error { _ = "STUB: not implemented"; return nil }
 
-func (hc *HintCollector) Sync() error {
-	if hc.closed {
-		return errHintCollectorClosed
-	}
-	if err := hc.flush(false); err != nil {
-		return err
-	}
-	return hc.writer.Sync()
-}
+func (hc *HintCollector) Flush() error { _ = "STUB: not implemented"; return nil }
 
-func (hc *HintCollector) Close() error {
-	if hc.closed {
-		return nil
-	}
-	if err := hc.flush(true); err != nil {
-		return err
-	}
-	hc.closed = true
-	return hc.writer.Close()
-}
+func (hc *HintCollector) Sync() error { _ = "STUB: not implemented"; return nil }
 
-func (hc *HintCollector) flush(sync bool) error {
-	if len(hc.buf) == 0 {
-		if sync {
-			return hc.writer.Sync()
-		}
-		return nil
-	}
-	for i := range hc.buf {
-		entry := hc.buf[i]
-		if err := hc.writer.Write(&entry); err != nil {
-			return err
-		}
-	}
-	hc.buf = hc.buf[:0]
-	if sync {
-		return hc.writer.Sync()
-	}
-	return nil
-}
+func (hc *HintCollector) Close() error { _ = "STUB: not implemented"; return nil }
+
+func (hc *HintCollector) flush(sync bool) error { _ = "STUB: not implemented"; return nil }

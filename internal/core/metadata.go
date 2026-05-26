@@ -14,10 +14,6 @@
 
 package core
 
-import (
-	"github.com/nutsdb/nutsdb/internal/utils"
-)
-
 // DataStructure represents the data structure we have already supported
 type DataStructure = uint16
 
@@ -127,97 +123,53 @@ type MetaData struct {
 }
 
 func (meta *MetaData) Size() int64 {
+	_ = "STUB: not implemented"
 	// CRC
-	size := 4
-
-	size += utils.UvarintSize(uint64(meta.KeySize))
-	size += utils.UvarintSize(uint64(meta.ValueSize))
-	size += utils.UvarintSize(meta.Timestamp)
-	size += utils.UvarintSize(uint64(meta.TTL))
-	size += utils.UvarintSize(uint64(meta.Flag))
-	size += utils.UvarintSize(meta.TxID)
-	size += utils.UvarintSize(uint64(meta.Status))
-	size += utils.UvarintSize(uint64(meta.Ds))
-	size += utils.UvarintSize(meta.BucketId)
-
-	return int64(size)
+	return 0
 }
 
-func (meta *MetaData) PayloadSize() int64 {
-	return int64(meta.BucketSize) + int64(meta.KeySize) + int64(meta.ValueSize)
-}
+func (meta *MetaData) PayloadSize() int64 { _ = "STUB: not implemented"; return 0 }
 
-func NewMetaData() *MetaData {
-	return new(MetaData)
-}
+func NewMetaData() *MetaData { _ = "STUB: not implemented"; return nil }
 
-func (meta *MetaData) WithKeySize(keySize uint32) *MetaData {
-	meta.KeySize = keySize
-	return meta
-}
+func (meta *MetaData) WithKeySize(keySize uint32) *MetaData { _ = "STUB: not implemented"; return nil }
 
 func (meta *MetaData) WithValueSize(valueSize uint32) *MetaData {
-	meta.ValueSize = valueSize
-	return meta
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (meta *MetaData) WithTimeStamp(timestamp uint64) *MetaData {
-	meta.Timestamp = timestamp
-	return meta
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (meta *MetaData) WithTTL(ttl uint32) *MetaData {
-	meta.TTL = ttl
-	return meta
-}
+func (meta *MetaData) WithTTL(ttl uint32) *MetaData { _ = "STUB: not implemented"; return nil }
 
-func (meta *MetaData) WithFlag(flag uint16) *MetaData {
-	meta.Flag = flag
-	return meta
-}
+func (meta *MetaData) WithFlag(flag uint16) *MetaData { _ = "STUB: not implemented"; return nil }
 
 func (meta *MetaData) WithBucketSize(bucketSize uint32) *MetaData {
-	meta.BucketSize = bucketSize
-	return meta
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (meta *MetaData) WithTxID(txID uint64) *MetaData {
-	meta.TxID = txID
-	return meta
-}
+func (meta *MetaData) WithTxID(txID uint64) *MetaData { _ = "STUB: not implemented"; return nil }
 
-func (meta *MetaData) WithStatus(status uint16) *MetaData {
-	meta.Status = status
-	return meta
-}
+func (meta *MetaData) WithStatus(status uint16) *MetaData { _ = "STUB: not implemented"; return nil }
 
-func (meta *MetaData) WithDs(ds uint16) *MetaData {
-	meta.Ds = ds
-	return meta
-}
+func (meta *MetaData) WithDs(ds uint16) *MetaData { _ = "STUB: not implemented"; return nil }
 
-func (meta *MetaData) WithCrc(crc uint32) *MetaData {
-	meta.Crc = crc
-	return meta
-}
+func (meta *MetaData) WithCrc(crc uint32) *MetaData { _ = "STUB: not implemented"; return nil }
 
 func (meta *MetaData) WithBucketId(bucketID uint64) *MetaData {
-	meta.BucketId = bucketID
-	return meta
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (meta *MetaData) IsBTree() bool {
-	return meta.Ds == DataStructureBTree
-}
+func (meta *MetaData) IsBTree() bool { _ = "STUB: not implemented"; return false }
 
-func (meta *MetaData) IsSet() bool {
-	return meta.Ds == DataStructureSet
-}
+func (meta *MetaData) IsSet() bool { _ = "STUB: not implemented"; return false }
 
-func (meta *MetaData) IsSortSet() bool {
-	return meta.Ds == DataStructureSortedSet
-}
+func (meta *MetaData) IsSortSet() bool { _ = "STUB: not implemented"; return false }
 
-func (meta *MetaData) IsList() bool {
-	return meta.Ds == DataStructureList
-}
+func (meta *MetaData) IsList() bool { _ = "STUB: not implemented"; return false }

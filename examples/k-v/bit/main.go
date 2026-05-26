@@ -59,44 +59,10 @@ func main() {
 	get("key2")       // get value: [0, 0, 0, 0, 0, 1]
 }
 
-func get(key string) {
-	if err := db.View(func(tx *nutsdb.Tx) error {
-		value, err := tx.Get(bucket, []byte(key))
-		if err != nil {
-			return err
-		}
-		log.Println("get value: ", string(value))
-		return nil
-	}); err != nil {
-		log.Println(err)
-	}
-}
+func get(key string) { _ = "STUB: not implemented"; return }
 
-func put(key, value string) {
-	if err := db.Update(func(tx *nutsdb.Tx) error {
-		return tx.Put(bucket, []byte(key), []byte(value), nutsdb.Persistent)
-	}); err != nil {
-		log.Println(err)
-	}
-}
+func put(key, value string) { _ = "STUB: not implemented"; return }
 
-func getBit(key string, offset int) {
-	if err := db.View(func(tx *nutsdb.Tx) error {
-		bit, err := tx.GetBit(bucket, []byte(key), offset)
-		if err != nil {
-			return err
-		}
-		log.Println("get bit:", bit)
-		return nil
-	}); err != nil {
-		log.Println(err)
-	}
-}
+func getBit(key string, offset int) { _ = "STUB: not implemented"; return }
 
-func setBit(key string, offset int, bit byte) {
-	if err := db.Update(func(tx *nutsdb.Tx) error {
-		return tx.SetBit(bucket, []byte(key), offset, bit)
-	}); err != nil {
-		log.Println(err)
-	}
-}
+func setBit(key string, offset int, bit byte) { _ = "STUB: not implemented"; return }

@@ -5,9 +5,4 @@ type Item[T any] struct {
 	Record *T
 }
 
-func NewItem[T any](key []byte, record *T) *Item[T] {
-	return &Item[T]{
-		Key:    key,
-		Record: record,
-	}
-}
+func NewItem[T any](key []byte, record *T) *Item[T] { _ = "STUB: not implemented"; return nil }

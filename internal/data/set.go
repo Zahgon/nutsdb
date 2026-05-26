@@ -18,7 +18,6 @@ import (
 	"errors"
 
 	"github.com/nutsdb/nutsdb/internal/core"
-	"github.com/nutsdb/nutsdb/internal/utils"
 )
 
 var (
@@ -36,225 +35,65 @@ type Set struct {
 	M map[string]map[uint32]*core.Record
 }
 
-func NewSet() *Set {
-	return &Set{
-		M: map[string]map[uint32]*core.Record{},
-	}
-}
+func NewSet() *Set { _ = "STUB: not implemented"; return nil }
 
 // SAdd adds the specified members to the set stored at key.
 func (s *Set) SAdd(key string, values [][]byte, records []*core.Record) error {
-	set, ok := s.M[key]
-	if !ok {
-		s.M[key] = map[uint32]*core.Record{}
-		set = s.M[key]
-	}
-
-	for i, value := range values {
-		hash, err := utils.GetFnv32(value)
-		if err != nil {
-			return err
-		}
-		set[hash] = records[i]
-	}
-
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // SRem removes the specified members from the set stored at key.
-func (s *Set) SRem(key string, values ...[]byte) error {
-	set, ok := s.M[key]
-	if !ok {
-		return ErrSetNotExist
-	}
-
-	if len(values) == 0 || values[0] == nil {
-		return ErrMemberEmpty
-	}
-
-	for _, value := range values {
-		hash, err := utils.GetFnv32(value)
-		if err != nil {
-			return err
-		}
-		delete(set, hash)
-	}
-
-	return nil
-}
+func (s *Set) SRem(key string, values ...[]byte) error { _ = "STUB: not implemented"; return nil }
 
 // SHasKey returns whether it has the set at given key.
-func (s *Set) SHasKey(key string) bool {
-	if _, ok := s.M[key]; ok {
-		return true
-	}
-	return false
-}
+func (s *Set) SHasKey(key string) bool { _ = "STUB: not implemented"; return false }
 
 // SPop removes and returns one or more random elements from the set value store at key.
-func (s *Set) SPop(key string) *core.Record {
-	if !s.SHasKey(key) {
-		return nil
-	}
-
-	for hash, record := range s.M[key] {
-		delete(s.M[key], hash)
-		return record
-	}
-
-	return nil
-}
+func (s *Set) SPop(key string) *core.Record { _ = "STUB: not implemented"; return nil }
 
 // SCard Returns the set cardinality (number of elements) of the set stored at key.
-func (s *Set) SCard(key string) int {
-	if !s.SHasKey(key) {
-		return 0
-	}
-
-	return len(s.M[key])
-}
+func (s *Set) SCard(key string) int { _ = "STUB: not implemented"; return 0 }
 
 // SDiff Returns the members of the set resulting from the difference between the first set and all the successive sets.
 func (s *Set) SDiff(key1, key2 string) ([]*core.Record, error) {
-	if !s.SHasKey(key1) || !s.SHasKey(key2) {
-		return nil, ErrSetNotExist
-	}
-
-	records := make([]*core.Record, 0)
-
-	for hash, record := range s.M[key1] {
-		if _, ok := s.M[key2][hash]; !ok {
-			records = append(records, record)
-		}
-	}
-	return records, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // SInter Returns the members of the set resulting from the intersection of all the given sets.
 func (s *Set) SInter(key1, key2 string) ([]*core.Record, error) {
-	if !s.SHasKey(key1) || !s.SHasKey(key2) {
-		return nil, ErrSetNotExist
-	}
-
-	records := make([]*core.Record, 0)
-
-	for hash, record := range s.M[key1] {
-		if _, ok := s.M[key2][hash]; ok {
-			records = append(records, record)
-		}
-	}
-	return records, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // SIsMember Returns if member is a member of the set stored at key.
 func (s *Set) SIsMember(key string, value []byte) (bool, error) {
-	if _, ok := s.M[key]; !ok {
-		return false, ErrSetNotExist
-	}
-
-	hash, err := utils.GetFnv32(value)
-	if err != nil {
-		return false, err
-	}
-
-	if _, ok := s.M[key][hash]; ok {
-		return true, nil
-	}
-
+	_ = "STUB: not implemented"
 	return false, nil
 }
 
 // SAreMembers Returns if members are members of the set stored at key.
 // For multiple items it returns true only if all the items exist.
 func (s *Set) SAreMembers(key string, values ...[]byte) (bool, error) {
-	if _, ok := s.M[key]; !ok {
-		return false, ErrSetNotExist
-	}
-
-	for _, value := range values {
-
-		hash, err := utils.GetFnv32(value)
-		if err != nil {
-			return false, err
-		}
-
-		if _, ok := s.M[key][hash]; !ok {
-			return false, nil
-		}
-	}
-
-	return true, nil
+	_ = "STUB: not implemented"
+	return false, nil
 }
 
 // SMembers returns all the members of the set value stored at key.
 func (s *Set) SMembers(key string) ([]*core.Record, error) {
-	if _, ok := s.M[key]; !ok {
-		return nil, ErrSetNotExist
-	}
-
-	records := make([]*core.Record, 0)
-
-	for _, record := range s.M[key] {
-		records = append(records, record)
-	}
-
-	return records, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // SMove moves member from the set at source to the set at destination.
 func (s *Set) SMove(key1, key2 string, value []byte) (bool, error) {
-	if !s.SHasKey(key1) || !s.SHasKey(key2) {
-		return false, ErrSetNotExist
-	}
-
-	set1, set2 := s.M[key1], s.M[key2]
-
-	hash, err := utils.GetFnv32(value)
-	if err != nil {
-		return false, err
-	}
-
-	var (
-		member *core.Record
-		ok     bool
-	)
-
-	if member, ok = set1[hash]; !ok {
-		return false, ErrSetMemberNotExist
-	}
-
-	if _, ok = set2[hash]; !ok {
-		err = s.SAdd(key2, [][]byte{value}, []*core.Record{member})
-		if err != nil {
-			return false, err
-		}
-	}
-
-	err = s.SRem(key1, value)
-	if err != nil {
-		return false, err
-	}
-
-	return true, nil
+	_ = "STUB: not implemented"
+	return false, nil
 }
 
 // SUnion returns the members of the set resulting from the union of all the given sets.
 func (s *Set) SUnion(key1, key2 string) ([]*core.Record, error) {
-	if !s.SHasKey(key1) || !s.SHasKey(key2) {
-		return nil, ErrSetNotExist
-	}
-
-	records, err := s.SMembers(key1)
-
-	if err != nil {
-		return nil, err
-	}
-
-	for hash, record := range s.M[key2] {
-		if _, ok := s.M[key1][hash]; !ok {
-			records = append(records, record)
-		}
-	}
-
-	return records, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }

@@ -40,7 +40,8 @@ type TTLConfig = ttl.Config
 type ListImplementationType data.ListImplementationType
 
 func (impl ListImplementationType) toInternal() data.ListImplementationType {
-	return data.ListImplementationType(impl)
+	_ = "STUB: not implemented"
+	return *new(data.ListImplementationType)
 }
 
 const (
@@ -63,9 +64,7 @@ type ErrorHandler interface {
 // The ErrorHandlerFunc type is an adapter to ErrorHandler.
 type ErrorHandlerFunc func(err error)
 
-func (fn ErrorHandlerFunc) HandleError(err error) {
-	fn(err)
-}
+func (fn ErrorHandlerFunc) HandleError(err error) { _ = "STUB: not implemented"; return }
 
 type LessFunc func(l, r string) bool
 
@@ -190,141 +189,69 @@ var DefaultOptions = func() Options {
 
 type Option func(*Options)
 
-func WithDir(dir string) Option {
-	return func(opt *Options) {
-		opt.Dir = dir
-	}
-}
+func WithDir(dir string) Option { _ = "STUB: not implemented"; return *new(Option) }
 
 func WithEntryIdxMode(entryIdxMode EntryIdxMode) Option {
-	return func(opt *Options) {
-		opt.EntryIdxMode = entryIdxMode
-	}
+	_ = "STUB: not implemented"
+	return *new(Option)
 }
 
-func WithRWMode(rwMode RWMode) Option {
-	return func(opt *Options) {
-		opt.RWMode = rwMode
-	}
-}
+func WithRWMode(rwMode RWMode) Option { _ = "STUB: not implemented"; return *new(Option) }
 
-func WithSegmentSize(size int64) Option {
-	return func(opt *Options) {
-		opt.SegmentSize = size
-	}
-}
+func WithSegmentSize(size int64) Option { _ = "STUB: not implemented"; return *new(Option) }
 
-func WithMaxBatchCount(count int64) Option {
-	return func(opt *Options) {
-		opt.MaxBatchCount = count
-	}
-}
+func WithMaxBatchCount(count int64) Option { _ = "STUB: not implemented"; return *new(Option) }
 
-func WithHintKeyAndRAMIdxCacheSize(size int) Option {
-	return func(opt *Options) {
-		opt.HintKeyAndRAMIdxCacheSize = size
-	}
-}
+func WithHintKeyAndRAMIdxCacheSize(size int) Option { _ = "STUB: not implemented"; return *new(Option) }
 
-func WithMaxBatchSize(size int64) Option {
-	return func(opt *Options) {
-		opt.MaxBatchSize = size
-	}
-}
+func WithMaxBatchSize(size int64) Option { _ = "STUB: not implemented"; return *new(Option) }
 
-func WithNodeNum(num int64) Option {
-	return func(opt *Options) {
-		opt.NodeNum = num
-	}
-}
+func WithNodeNum(num int64) Option { _ = "STUB: not implemented"; return *new(Option) }
 
-func WithSyncEnable(enable bool) Option {
-	return func(opt *Options) {
-		opt.SyncEnable = enable
-	}
-}
+func WithSyncEnable(enable bool) Option { _ = "STUB: not implemented"; return *new(Option) }
 
-func WithMaxFdNumsInCache(num int) Option {
-	return func(opt *Options) {
-		opt.MaxFdNumsInCache = num
-	}
-}
+func WithMaxFdNumsInCache(num int) Option { _ = "STUB: not implemented"; return *new(Option) }
 
 func WithCleanFdsCacheThreshold(threshold float64) Option {
-	return func(opt *Options) {
-		opt.CleanFdsCacheThreshold = threshold
-	}
+	_ = "STUB: not implemented"
+	return *new(Option)
 }
 
-func WithBufferSizeOfRecovery(size int) Option {
-	return func(opt *Options) {
-		opt.BufferSizeOfRecovery = size
-	}
-}
+func WithBufferSizeOfRecovery(size int) Option { _ = "STUB: not implemented"; return *new(Option) }
 
-func WithGCWhenClose(enable bool) Option {
-	return func(opt *Options) {
-		opt.GCWhenClose = enable
-	}
-}
+func WithGCWhenClose(enable bool) Option { _ = "STUB: not implemented"; return *new(Option) }
 
 func WithErrorHandler(errorHandler ErrorHandler) Option {
-	return func(opt *Options) {
-		opt.ErrorHandler = errorHandler
-	}
+	_ = "STUB: not implemented"
+	return *new(Option)
 }
 
 func WithCommitBufferSize(commitBufferSize int64) Option {
-	return func(opt *Options) {
-		opt.CommitBufferSize = commitBufferSize
-	}
+	_ = "STUB: not implemented"
+	return *new(Option)
 }
 
-func WithLessFunc(lessFunc LessFunc) Option {
-	return func(opt *Options) {
-		opt.LessFunc = lessFunc
-	}
-}
+func WithLessFunc(lessFunc LessFunc) Option { _ = "STUB: not implemented"; return *new(Option) }
 
 func WithMaxWriteRecordCount(maxWriteRecordCount int64) Option {
-	return func(opt *Options) {
-		opt.MaxWriteRecordCount = maxWriteRecordCount
-	}
+	_ = "STUB: not implemented"
+	return *new(Option)
 }
 
-func WithEnableHintFile(enable bool) Option {
-	return func(opt *Options) {
-		opt.EnableHintFile = enable
-	}
-}
+func WithEnableHintFile(enable bool) Option { _ = "STUB: not implemented"; return *new(Option) }
 
-func WithEnableMergeV2(enable bool) Option {
-	return func(opt *Options) {
-		opt.EnableMergeV2 = enable
-	}
-}
+func WithEnableMergeV2(enable bool) Option { _ = "STUB: not implemented"; return *new(Option) }
 
 func WithListImpl(implType ListImplementationType) Option {
-	return func(opt *Options) {
-		opt.ListImpl = implType
-	}
+	_ = "STUB: not implemented"
+	return *new(Option)
 }
 
 // WithTTLConfig sets the TTL configuration.
-func WithTTLConfig(config TTLConfig) Option {
-	return func(opt *Options) {
-		opt.TTLConfig = config
-	}
-}
+func WithTTLConfig(config TTLConfig) Option { _ = "STUB: not implemented"; return *new(Option) }
 
 // DefaultTTLConfig returns the default TTL configuration.
 // This is a convenience function that wraps ttl.DefaultConfig().
-func DefaultTTLConfig() TTLConfig {
-	return ttl.DefaultConfig()
-}
+func DefaultTTLConfig() TTLConfig { _ = "STUB: not implemented"; return *new(TTLConfig) }
 
-func WithEnableWatch(enable bool) Option {
-	return func(opt *Options) {
-		opt.EnableWatch = enable
-	}
-}
+func WithEnableWatch(enable bool) Option { _ = "STUB: not implemented"; return *new(Option) }

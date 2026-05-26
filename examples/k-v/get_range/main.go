@@ -58,23 +58,6 @@ func main() {
 	getRange("key", 10, 13) // got value: 'test'
 }
 
-func put(key, value string) {
-	if err := db.Update(func(tx *nutsdb.Tx) error {
-		return tx.Put(bucket, []byte(key), []byte(value), nutsdb.Persistent)
-	}); err != nil {
-		log.Println(err)
-	}
-}
+func put(key, value string) { _ = "STUB: not implemented"; return }
 
-func getRange(key string, start, end int) {
-	if err := db.View(func(tx *nutsdb.Tx) error {
-		value, err := tx.GetRange(bucket, []byte(key), start, end)
-		if err != nil {
-			return err
-		}
-		log.Printf("got value: '%s'", string(value))
-		return nil
-	}); err != nil {
-		log.Println(err)
-	}
-}
+func getRange(key string, start, end int) { _ = "STUB: not implemented"; return }

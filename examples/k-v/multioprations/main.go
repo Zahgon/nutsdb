@@ -56,25 +56,6 @@ func main() {
 	mGet([]byte("1"), []byte("2"))
 }
 
-func mGet(key ...[]byte) {
-	if err := db.View(func(tx *nutsdb.Tx) error {
-		values, err := tx.MGet(bucket, key...)
-		if err != nil {
-			return err
-		}
-		for i, value := range values {
-			log.Printf("get value by MGet, the %d value is '%s'", i, string(value))
-		}
-		return nil
-	}); err != nil {
-		log.Println(err)
-	}
-}
+func mGet(key ...[]byte) { _ = "STUB: not implemented"; return }
 
-func mSet(args ...[]byte) {
-	if err := db.Update(func(tx *nutsdb.Tx) error {
-		return tx.MSet(bucket, nutsdb.Persistent, args...)
-	}); err != nil {
-		log.Println(err)
-	}
-}
+func mSet(args ...[]byte) { _ = "STUB: not implemented"; return }

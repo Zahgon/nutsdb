@@ -2,10 +2,8 @@ package data
 
 import (
 	"errors"
-	"time"
 
 	"github.com/nutsdb/nutsdb/internal/core"
-	"github.com/nutsdb/nutsdb/internal/utils"
 )
 
 var (
@@ -42,18 +40,7 @@ type HeadTailSeq struct {
 	Tail uint64
 }
 
-func (seq *HeadTailSeq) GenerateSeq(isLeft bool) uint64 {
-	var res uint64
-	if isLeft {
-		res = seq.Head
-		seq.Head--
-	} else {
-		res = seq.Tail
-		seq.Tail++
-	}
-
-	return res
-}
+func (seq *HeadTailSeq) GenerateSeq(isLeft bool) uint64 { _ = "STUB: not implemented"; return 0 }
 
 // ListStructure defines the interface for List storage implementations.
 // It supports multiple implementations: BTree, DoublyLinkedList, SkipList, etc.
@@ -130,231 +117,80 @@ type List struct {
 	ListImpl  ListImplementationType
 }
 
-func NewList(listImpl ListImplementationType) *List {
-	return &List{
-		Items:     make(map[string]ListStructure),
-		TTL:       make(map[string]uint32),
-		TimeStamp: make(map[string]uint64),
-		Seq:       make(map[string]*HeadTailSeq),
-		ListImpl:  listImpl,
-	}
-}
+func NewList(listImpl ListImplementationType) *List { _ = "STUB: not implemented"; return nil }
 
 // CreateListStructure creates a new list storage structure based on configuration.
 func (l *List) CreateListStructure() ListStructure {
-	switch l.ListImpl {
-	case ListImplBTree:
-		return NewBTree(0)
-	case ListImplDoublyLinkedList:
-		return NewDoublyLinkedList()
-	default:
-		// Default to DoublyLinkedList for safety
-		return NewDoublyLinkedList()
-	}
+	_ = "STUB: not implemented"
+	return *new(ListStructure)
 }
 
-func (l *List) LPush(key string, r *core.Record) error {
-	return l.Push(key, r, true)
-}
+// Default to DoublyLinkedList for safety
 
-func (l *List) RPush(key string, r *core.Record) error {
-	return l.Push(key, r, false)
-}
+func (l *List) LPush(key string, r *core.Record) error { _ = "STUB: not implemented"; return nil }
+
+func (l *List) RPush(key string, r *core.Record) error { _ = "STUB: not implemented"; return nil }
 
 func (l *List) Push(key string, r *core.Record, isLeft bool) error {
+	_ = "STUB: not implemented"
 	// key is seq + user_key
-	userKey, curSeq := utils.DecodeListKey([]byte(key))
-	userKeyStr := string(userKey)
-	if l.IsExpire(userKeyStr) {
-		return ErrListNotFound
-	}
-
-	list, ok := l.Items[userKeyStr]
-	if !ok {
-		l.Items[userKeyStr] = l.CreateListStructure()
-		list = l.Items[userKeyStr]
-	}
-
-	// Initialize seq if not exists
-	if _, ok := l.Seq[userKeyStr]; !ok {
-		l.Seq[userKeyStr] = &HeadTailSeq{Head: InitialListSeq, Tail: InitialListSeq + 1}
-	}
-
-	list.InsertRecord(utils.ConvertUint64ToBigEndianBytes(curSeq), r)
-
-	// Update seq boundaries to track the next insertion positions
-	// This is important for recovery scenarios where we rebuild the index
-	// Head and Tail should always represent the next available positions for insertion
-	seq := l.Seq[userKeyStr]
-	if isLeft {
-		// LPush: Head should be the next available position on the left
-		// If current seq is the actual head, set Head to current seq - 1
-		if curSeq <= seq.Head {
-			seq.Head = curSeq - 1
-		}
-	} else {
-		// RPush: Tail should be the next available position on the right
-		// If current seq is at or beyond current tail, update Tail accordingly
-		if curSeq >= seq.Tail {
-			seq.Tail = curSeq + 1
-		}
-	}
-
 	return nil
 }
 
-func (l *List) LPop(key string) (*core.Record, error) {
-	if l.IsExpire(key) {
-		return nil, ErrListNotFound
-	}
+// Initialize seq if not exists
 
-	list, ok := l.Items[key]
-	if !ok {
-		return nil, ErrListNotFound
-	}
+// Update seq boundaries to track the next insertion positions
+// This is important for recovery scenarios where we rebuild the index
+// Head and Tail should always represent the next available positions for insertion
 
-	// Use PopMin for efficient O(1) head removal
-	item, ok := list.PopMin()
-	if !ok {
-		return nil, ErrEmptyList
-	}
+// LPush: Head should be the next available position on the left
+// If current seq is the actual head, set Head to current seq - 1
 
-	// After LPop, Head should point to the next element's position
-	// Note: We don't update Head here because it represents "next push position"
-	// The popped element's sequence is already consumed
-	return item.Record, nil
-}
+// RPush: Tail should be the next available position on the right
+// If current seq is at or beyond current tail, update Tail accordingly
+
+func (l *List) LPop(key string) (*core.Record, error) { _ = "STUB: not implemented"; return nil, nil }
+
+// Use PopMin for efficient O(1) head removal
+
+// After LPop, Head should point to the next element's position
+// Note: We don't update Head here because it represents "next push position"
+// The popped element's sequence is already consumed
 
 // RPop removes and returns the last element of the list stored at key.
-func (l *List) RPop(key string) (*core.Record, error) {
-	if l.IsExpire(key) {
-		return nil, ErrListNotFound
-	}
+func (l *List) RPop(key string) (*core.Record, error) { _ = "STUB: not implemented"; return nil, nil }
 
-	list, ok := l.Items[key]
-	if !ok {
-		return nil, ErrListNotFound
-	}
+// Use PopMax for efficient O(1) tail removal
 
-	// Use PopMax for efficient O(1) tail removal
-	item, ok := list.PopMax()
-	if !ok {
-		return nil, ErrEmptyList
-	}
-
-	// After RPop, Tail should point to the next element's position
-	// Note: We don't update Tail here because it represents "next push position"
-	// The popped element's sequence is already consumed
-	return item.Record, nil
-}
+// After RPop, Tail should point to the next element's position
+// Note: We don't update Tail here because it represents "next push position"
+// The popped element's sequence is already consumed
 
 func (l *List) LPeek(key string) (*core.Item[core.Record], error) {
-	return l.peek(key, true)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func (l *List) RPeek(key string) (*core.Item[core.Record], error) {
-	return l.peek(key, false)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func (l *List) peek(key string, isLeft bool) (*core.Item[core.Record], error) {
-	if l.IsExpire(key) {
-		return nil, ErrListNotFound
-	}
-	list, ok := l.Items[key]
-	if !ok {
-		return nil, ErrListNotFound
-	}
-
-	if isLeft {
-		item, ok := list.Min()
-		if ok {
-			return item, nil
-		}
-	} else {
-		item, ok := list.Max()
-		if ok {
-			return item, nil
-		}
-	}
-
-	return nil, ErrEmptyList
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // LRange returns the specified elements of the list stored at key [start,end]
 func (l *List) LRange(key string, start, end int) ([]*core.Record, error) {
-	size, err := l.Size(key)
-	if err != nil || size == 0 {
-		return nil, err
-	}
-
-	start, end, err = checkBounds(start, end, size)
-	if err != nil {
-		return nil, err
-	}
-
-	var res []*core.Record
-	allRecords := l.Items[key].All()
-	for i, item := range allRecords {
-		if i >= start && i <= end {
-			res = append(res, item)
-		}
-	}
-
-	return res, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // GetRemoveIndexes returns a slice of indices to be removed from the list based on the count
 func (l *List) GetRemoveIndexes(key string, count int, cmp func(r *core.Record) (bool, error)) ([][]byte, error) {
-	if l.IsExpire(key) {
-		return nil, ErrListNotFound
-	}
-
-	list, ok := l.Items[key]
-
-	if !ok {
-		return nil, ErrListNotFound
-	}
-
-	var res [][]byte
-	var allItems []*core.Item[core.Record]
-	if count == 0 {
-		count = list.Count()
-	}
-
-	allItems = l.Items[key].AllItems()
-	if count > 0 {
-		for _, item := range allItems {
-			if count <= 0 {
-				break
-			}
-			r := item.Record
-			ok, err := cmp(r)
-			if err != nil {
-				return nil, err
-			}
-			if ok {
-				res = append(res, item.Key)
-				count--
-			}
-		}
-	} else {
-		for i := len(allItems) - 1; i >= 0; i-- {
-			if count >= 0 {
-				break
-			}
-			r := allItems[i].Record
-			ok, err := cmp(r)
-			if err != nil {
-				return nil, err
-			}
-			if ok {
-				res = append(res, allItems[i].Key)
-				count++
-			}
-		}
-	}
-
-	return res, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // LRem removes the first count occurrences of elements equal to value from the list stored at key.
@@ -363,190 +199,40 @@ func (l *List) GetRemoveIndexes(key string, count int, cmp func(r *core.Record) 
 // count < 0: Remove elements equal to value moving from tail to head.
 // count = 0: Remove all elements equal to value.
 func (l *List) LRem(key string, count int, cmp func(r *core.Record) (bool, error)) error {
-	removeIndexes, err := l.GetRemoveIndexes(key, count, cmp)
-	if err != nil {
-		return err
-	}
-
-	list := l.Items[key]
-	for _, idx := range removeIndexes {
-		list.Delete(idx)
-	}
-
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // LTrim trim an existing list so that it will contain only the specified range of elements specified.
-func (l *List) LTrim(key string, start, end int) error {
-	if l.IsExpire(key) {
-		return ErrListNotFound
-	}
-	if _, ok := l.Items[key]; !ok {
-		return ErrListNotFound
-	}
-
-	list := l.Items[key]
-	allItems := list.AllItems()
-	for i, item := range allItems {
-		if i < start || i > end {
-			list.Delete(item.Key)
-		}
-	}
-
-	return nil
-}
+func (l *List) LTrim(key string, start, end int) error { _ = "STUB: not implemented"; return nil }
 
 // LRemByIndex remove the list element at specified index
-func (l *List) LRemByIndex(key string, indexes []int) error {
-	if l.IsExpire(key) {
-		return ErrListNotFound
-	}
+func (l *List) LRemByIndex(key string, indexes []int) error { _ = "STUB: not implemented"; return nil }
 
-	idxes := l.GetValidIndexes(key, indexes)
-	if len(idxes) == 0 {
-		return nil
-	}
-
-	list := l.Items[key]
-	allItems := list.AllItems()
-	for i, item := range allItems {
-		if _, ok := idxes[i]; ok {
-			list.Delete(item.Key)
-		}
-	}
-
+func (l *List) GetValidIndexes(key string, indexes []int) map[int]struct{} {
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func (l *List) GetValidIndexes(key string, indexes []int) map[int]struct{} {
-	idxes := make(map[int]struct{})
-	listLen, err := l.Size(key)
-	if err != nil || listLen == 0 {
-		return idxes
-	}
+func (l *List) IsExpire(key string) bool { _ = "STUB: not implemented"; return false }
 
-	for _, idx := range indexes {
-		if idx < 0 || idx >= listLen {
-			continue
-		}
-		idxes[idx] = struct{}{}
-	}
+func (l *List) Size(key string) (int, error) { _ = "STUB: not implemented"; return 0, nil }
 
-	return idxes
-}
+func (l *List) IsEmpty(key string) (bool, error) { _ = "STUB: not implemented"; return false, nil }
 
-func (l *List) IsExpire(key string) bool {
-	if l == nil {
-		return false
-	}
+func (l *List) GetListTTL(key string) (uint32, error) { _ = "STUB: not implemented"; return 0, nil }
 
-	_, ok := l.TTL[key]
-	if !ok {
-		return false
-	}
-
-	now := time.Now().Unix()
-	timestamp := l.TimeStamp[key]
-	if l.TTL[key] > 0 && uint64(l.TTL[key])+timestamp > uint64(now) || l.TTL[key] == uint32(0) {
-		return false
-	}
-
-	delete(l.Items, key)
-	delete(l.TTL, key)
-	delete(l.TimeStamp, key)
-	delete(l.Seq, key)
-
-	return true
-}
-
-func (l *List) Size(key string) (int, error) {
-	if l.IsExpire(key) {
-		return 0, ErrListNotFound
-	}
-	if _, ok := l.Items[key]; !ok {
-		return 0, ErrListNotFound
-	}
-
-	return l.Items[key].Count(), nil
-}
-
-func (l *List) IsEmpty(key string) (bool, error) {
-	size, err := l.Size(key)
-	if err != nil || size > 0 {
-		return false, err
-	}
-	return true, nil
-}
-
-func (l *List) GetListTTL(key string) (uint32, error) {
-	if l.IsExpire(key) {
-		return 0, ErrListNotFound
-	}
-
-	ttl := l.TTL[key]
-	timestamp := l.TimeStamp[key]
-	if ttl == 0 || timestamp == 0 {
-		return 0, nil
-	}
-
-	now := time.Now().Unix()
-	remain := timestamp + uint64(ttl) - uint64(now)
-
-	return uint32(remain), nil
-}
-
-func (l *List) ExpireList(key []byte, ttl uint32) {
-	l.TTL[string(key)] = ttl
-	l.TimeStamp[string(key)] = uint64(time.Now().Unix())
-}
+func (l *List) ExpireList(key []byte, ttl uint32) { _ = "STUB: not implemented"; return }
 
 func (l *List) GeneratePushKey(key []byte, isLeft bool) []byte {
+	_ = "STUB: not implemented"
 	// Retrieve or initialize the HeadTailSeq for the list
-	keyStr := string(key)
-	seq, ok := l.Seq[keyStr]
-	if !ok {
-		// If no seq entry exists, infer boundaries from existing items first
-		if items, exists := l.Items[keyStr]; exists && items.Count() > 0 {
-			minSeq, okMinSeq := items.Min()
-			maxSeq, okMaxSeq := items.Max()
-			if !okMinSeq || !okMaxSeq {
-				seq = &HeadTailSeq{Head: InitialListSeq, Tail: InitialListSeq + 1}
-			} else {
-				seq = &HeadTailSeq{
-					Head: utils.ConvertBigEndianBytesToUint64(minSeq.Key) - 1,
-					Tail: utils.ConvertBigEndianBytesToUint64(maxSeq.Key) + 1,
-				}
-			}
-		} else {
-			seq = &HeadTailSeq{Head: InitialListSeq, Tail: InitialListSeq + 1}
-		}
-		l.Seq[keyStr] = seq
-	}
-
-	seqValue := seq.GenerateSeq(isLeft)
-	return utils.EncodeListKey(key, seqValue)
+	return nil
 }
 
+// If no seq entry exists, infer boundaries from existing items first
+
 func checkBounds(start, end int, size int) (int, int, error) {
-	if start >= 0 && end < 0 {
-		end = size + end
-	}
-
-	if start < 0 && end > 0 {
-		start = size + start
-	}
-
-	if start < 0 && end < 0 {
-		start, end = size+start, size+end
-	}
-
-	if end >= size {
-		end = size - 1
-	}
-
-	if start > end {
-		return 0, 0, ErrStartOrEnd
-	}
-
-	return start, end, nil
+	_ = "STUB: not implemented"
+	return 0, 0, nil
 }

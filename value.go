@@ -2,7 +2,6 @@ package nutsdb
 
 import (
 	"sync"
-	"sync/atomic"
 )
 
 type request struct {
@@ -18,30 +17,12 @@ var requestPool = sync.Pool{
 	},
 }
 
-func (req *request) reset() {
-	req.tx = nil
-	req.Wg = sync.WaitGroup{}
-	req.Err = nil
+func (req *request) reset() { _ = "STUB: not implemented"; return }
 
-	atomic.StoreInt32(&req.ref, 0)
-}
+func (req *request) IncrRef() { _ = "STUB: not implemented"; return }
 
-func (req *request) IncrRef() {
-	atomic.AddInt32(&req.ref, 1)
-}
+func (req *request) DecrRef() { _ = "STUB: not implemented"; return }
 
-func (req *request) DecrRef() {
-	nRef := atomic.AddInt32(&req.ref, -1)
-	if nRef > 0 {
-		return
-	}
-	req.tx = nil
-	requestPool.Put(req)
-}
+func (req *request) Wait() error { _ = "STUB: not implemented"; return nil }
 
-func (req *request) Wait() error {
-	req.Wg.Wait()
-	err := req.Err
-	req.DecrRef() // DecrRef after writing to DB.
-	return err
-}
+// DecrRef after writing to DB.

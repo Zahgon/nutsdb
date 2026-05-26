@@ -15,12 +15,9 @@
 package nutsdb
 
 import (
-	"bytes"
 	"errors"
-	"math/rand"
 
 	"github.com/nutsdb/nutsdb/internal/core"
-	"github.com/nutsdb/nutsdb/internal/utils"
 )
 
 var (
@@ -44,226 +41,88 @@ type SortedSet struct {
 	M  map[string]*SkipList
 }
 
-func NewSortedSet(db *DB) *SortedSet {
-	return &SortedSet{
-		db: db,
-		M:  map[string]*SkipList{},
-	}
-}
+func NewSortedSet(db *DB) *SortedSet { _ = "STUB: not implemented"; return nil }
 
 func (z *SortedSet) ZAdd(key string, score SCORE, value []byte, record *core.Record) error {
-	sortedSet, ok := z.M[key]
-	if !ok {
-		z.M[key] = newSkipList(z.db)
-		sortedSet = z.M[key]
-	}
-
-	return sortedSet.Put(score, value, record)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (z *SortedSet) ZMembers(key string) (map[*core.Record]SCORE, error) {
-	sortedSet, ok := z.M[key]
-
-	if !ok {
-		return nil, ErrSortedSetNotFound
-	}
-
-	nodes := sortedSet.dict
-
-	members := make(map[*core.Record]SCORE, len(nodes))
-	for _, node := range nodes {
-		members[node.record] = node.score
-	}
-
-	return members, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-func (z *SortedSet) ZCard(key string) (int, error) {
-	if sortedSet, ok := z.M[key]; ok {
-		return int(sortedSet.length), nil
-	}
-
-	return 0, ErrSortedSetNotFound
-}
+func (z *SortedSet) ZCard(key string) (int, error) { _ = "STUB: not implemented"; return 0, nil }
 
 func (z *SortedSet) ZCount(key string, start SCORE, end SCORE, opts *GetByScoreRangeOptions) (int, error) {
-	if sortedSet, ok := z.M[key]; ok {
-		return len(sortedSet.GetByScoreRange(start, end, opts)), nil
-	}
-	return 0, ErrSortedSetNotFound
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
 func (z *SortedSet) ZPeekMax(key string) (*core.Record, SCORE, error) {
-	if sortedSet, ok := z.M[key]; ok {
-		node := sortedSet.PeekMax()
-		if node != nil {
-			return node.record, node.score, nil
-		}
-		return nil, 0, ErrSortedSetIsEmpty
-	}
-
-	return nil, 0, ErrSortedSetNotFound
+	_ = "STUB: not implemented"
+	return nil, *new(SCORE), nil
 }
 
 func (z *SortedSet) ZPopMax(key string) (*core.Record, SCORE, error) {
-	if sortedSet, ok := z.M[key]; ok {
-		node := sortedSet.PopMax()
-		if node != nil {
-			return node.record, node.score, nil
-		}
-		return nil, 0, ErrSortedSetIsEmpty
-	}
-
-	return nil, 0, ErrSortedSetNotFound
+	_ = "STUB: not implemented"
+	return nil, *new(SCORE), nil
 }
 
 func (z *SortedSet) ZPeekMin(key string) (*core.Record, SCORE, error) {
-	if sortedSet, ok := z.M[key]; ok {
-		node := sortedSet.PeekMin()
-		if node != nil {
-			return node.record, node.score, nil
-		}
-		return nil, 0, ErrSortedSetIsEmpty
-	}
-
-	return nil, 0, ErrSortedSetNotFound
+	_ = "STUB: not implemented"
+	return nil, *new(SCORE), nil
 }
 
 func (z *SortedSet) ZPopMin(key string) (*core.Record, SCORE, error) {
-	if sortedSet, ok := z.M[key]; ok {
-		node := sortedSet.PopMin()
-		if node != nil {
-			return node.record, node.score, nil
-		}
-		return nil, 0, ErrSortedSetIsEmpty
-	}
-
-	return nil, 0, ErrSortedSetNotFound
+	_ = "STUB: not implemented"
+	return nil, *new(SCORE), nil
 }
 
 func (z *SortedSet) ZRangeByScore(key string, start SCORE, end SCORE, opts *GetByScoreRangeOptions) ([]*core.Record, []float64, error) {
-	if sortedSet, ok := z.M[key]; ok {
-
-		nodes := sortedSet.GetByScoreRange(start, end, opts)
-
-		records := make([]*core.Record, len(nodes))
-		scores := make([]float64, len(nodes))
-
-		for i, node := range nodes {
-			records[i] = node.record
-			scores[i] = float64(node.score)
-		}
-
-		return records, scores, nil
-	}
-
-	return nil, nil, ErrSortedSetNotFound
+	_ = "STUB: not implemented"
+	return nil, nil, nil
 }
 
 func (z *SortedSet) ZRangeByRank(key string, start int, end int) ([]*core.Record, []float64, error) {
-	if sortedSet, ok := z.M[key]; ok {
-
-		nodes := sortedSet.GetByRankRange(start, end, false)
-
-		records := make([]*core.Record, len(nodes))
-		scores := make([]float64, len(nodes))
-
-		for i, node := range nodes {
-			records[i] = node.record
-			scores[i] = float64(node.score)
-		}
-
-		return records, scores, nil
-	}
-
-	return nil, nil, ErrSortedSetNotFound
+	_ = "STUB: not implemented"
+	return nil, nil, nil
 }
 
 func (z *SortedSet) ZRem(key string, value []byte) (*core.Record, error) {
-	if sortedSet, ok := z.M[key]; ok {
-		hash, err := utils.GetFnv32(value)
-		if err != nil {
-			return nil, err
-		}
-		node := sortedSet.Remove(hash)
-		if node != nil {
-			return node.record, nil
-		}
-		return nil, ErrSortedSetMemberNotExist
-	}
-
-	return nil, ErrSortedSetNotFound
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func (z *SortedSet) ZRemRangeByRank(key string, start int, end int) error {
-	if sortedSet, ok := z.M[key]; ok {
-
-		_ = sortedSet.GetByRankRange(start, end, true)
-		return nil
-	}
-
-	return ErrSortedSetNotFound
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (z *SortedSet) getZRemRangeByRankNodes(key string, start int, end int) ([]*SkipListNode, error) {
-	if sortedSet, ok := z.M[key]; ok {
-		return sortedSet.GetByRankRange(start, end, false), nil
-	}
-
-	return []*SkipListNode{}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func (z *SortedSet) ZRank(key string, value []byte) (int, error) {
-	if sortedSet, ok := z.M[key]; ok {
-		hash, err := utils.GetFnv32(value)
-		if err != nil {
-			return 0, err
-		}
-		rank := sortedSet.FindRank(hash)
-		if rank == 0 {
-			return 0, ErrSortedSetMemberNotExist
-		}
-		return rank, nil
-	}
-	return 0, ErrSortedSetNotFound
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
 func (z *SortedSet) ZRevRank(key string, value []byte) (int, error) {
-	if sortedSet, ok := z.M[key]; ok {
-		hash, err := utils.GetFnv32(value)
-		if err != nil {
-			return 0, err
-		}
-		rank := sortedSet.FindRevRank(hash)
-		if rank == 0 {
-			return 0, ErrSortedSetMemberNotExist
-		}
-		return rank, nil
-	}
-	return 0, ErrSortedSetNotFound
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
 func (z *SortedSet) ZScore(key string, value []byte) (float64, error) {
-	if sortedSet, ok := z.M[key]; ok {
-		node := sortedSet.GetByValue(value)
-		if node != nil {
-			return float64(sortedSet.GetByValue(value).score), nil
-		}
-		return 0, ErrSortedSetMemberNotExist
-	}
-	return 0, ErrSortedSetNotFound
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
 func (z *SortedSet) ZExist(key string, value []byte) (bool, error) {
-	if sortedSet, ok := z.M[key]; ok {
-		hash, err := utils.GetFnv32(value)
-		if err != nil {
-			return false, err
-		}
-		_, ok := sortedSet.dict[hash]
-		return ok, nil
-	}
-	return false, ErrSortedSetNotFound
+	_ = "STUB: not implemented"
+	return false, nil
 }
 
 // SCORE represents the score type.
@@ -296,257 +155,112 @@ type SkipListNode struct {
 
 // Hash returns the key of the node.
 func (sln *SkipListNode) Hash() uint32 {
-	return sln.hash
+	_ = "STUB: not implemented"
+
+	// Score returns the score of the node.
+	return 0
 }
 
-// Score returns the score of the node.
 func (sln *SkipListNode) Score() SCORE {
-	return sln.score
+	_ = "STUB: not implemented"
+
+	// createNode returns a newly initialized SkipListNode Object that implements the SkipListNode.
+	return *new(SCORE)
 }
 
-// createNode returns a newly initialized SkipListNode Object that implements the SkipListNode.
 func createNode(level int, score SCORE, hash uint32, record *core.Record) *SkipListNode {
-	node := SkipListNode{
-		hash:   hash,
-		record: record,
-		score:  score,
-		level:  make([]SkipListLevel, level),
-	}
-	return &node
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // randomLevel returns a random level for the new skiplist node we are going to create.
 // The return value of this function is between 1 and SkipListMaxLevel
 // (both inclusive), with a powerlaw-alike distribution where higher
 // levels are lesl likely to be returned.
-func randomLevel() int {
-	level := 1
+func randomLevel() int { _ = "STUB: not implemented"; return 0 }
 
-	for float64(rand.Int31()&0xFFFF) < SkipListP*0xFFFF {
-		level += 1
-	}
-	if level < SkipListMaxLevel {
-		return level
-	}
+func newSkipList(db *DB) *SkipList { _ = "STUB: not implemented"; return nil }
 
-	return SkipListMaxLevel
-}
-
-func newSkipList(db *DB) *SkipList {
-	skipList := &SkipList{
-		db:    db,
-		level: 1,
-		dict:  make(map[uint32]*SkipListNode),
-	}
-	hash, _ := utils.GetFnv32([]byte(""))
-	skipList.header = createNode(SkipListMaxLevel, 0, hash, nil)
-	return skipList
-}
-
-func (sl *SkipList) cmp(r1 *core.Record, r2 *core.Record) int {
-	val1, _ := sl.db.getValueByRecord(r1)
-	val2, _ := sl.db.getValueByRecord(r2)
-	return bytes.Compare(val1, val2)
-}
+func (sl *SkipList) cmp(r1 *core.Record, r2 *core.Record) int { _ = "STUB: not implemented"; return 0 }
 
 func (sl *SkipList) insertNode(score SCORE, hash uint32, record *core.Record) *SkipListNode {
-	var update [SkipListMaxLevel]*SkipListNode
-	var rank [SkipListMaxLevel]int64
-
-	x := sl.header
-	for i := sl.level - 1; i >= 0; i-- {
-		// store rank that is crosled to reach the insert position
-		if sl.level-1 == i {
-			rank[i] = 0
-		} else {
-			rank[i] = rank[i+1]
-		}
-
-		for x.level[i].forward != nil &&
-			(x.level[i].forward.score < score ||
-				(x.level[i].forward.score == score && // score is the same but the key is different
-					sl.cmp(x.level[i].forward.record, record) < 0)) {
-			rank[i] += x.level[i].span
-			x = x.level[i].forward
-		}
-
-		update[i] = x
-	}
-
-	/* we assume the key is not already inside, since we allow duplicated
-	 * scores, and the re-insertion of score and redis object should never
-	 * happen since the caller of Insert() should test in the hash table
-	 * if the element is already inside or not. */
-	level := randomLevel()
-
-	if level > sl.level { // add a new level
-		for i := sl.level; i < level; i++ {
-			rank[i] = 0
-			update[i] = sl.header
-			update[i].level[i].span = sl.length
-		}
-		sl.level = level
-	}
-
-	x = createNode(level, score, hash, record)
-	for i := 0; i < level; i++ {
-		x.level[i].forward = update[i].level[i].forward
-		update[i].level[i].forward = x
-
-		/* update span covered by update[i] as x is inserted here */
-		x.level[i].span = update[i].level[i].span - (rank[0] - rank[i])
-
-		update[i].level[i].span = (rank[0] - rank[i]) + 1
-	}
-
-	// increment span for untouched levels
-	for i := level; i < sl.level; i++ {
-		update[i].level[i].span++
-	}
-
-	if update[0] == sl.header {
-		x.backward = nil
-	} else {
-		x.backward = update[0]
-	}
-
-	if x.level[0].forward != nil {
-		x.level[0].forward.backward = x
-	} else {
-		sl.tail = x
-	}
-
-	sl.length++
-
-	return x
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// store rank that is crosled to reach the insert position
+
+// score is the same but the key is different
+
+/* we assume the key is not already inside, since we allow duplicated
+ * scores, and the re-insertion of score and redis object should never
+ * happen since the caller of Insert() should test in the hash table
+ * if the element is already inside or not. */
+
+// add a new level
+
+/* update span covered by update[i] as x is inserted here */
+
+// increment span for untouched levels
 
 // deleteNode represents internal function used by delete, DeleteByScore and DeleteByRank.
 func (sl *SkipList) deleteNode(x *SkipListNode, update [SkipListMaxLevel]*SkipListNode) {
-	for i := 0; i < sl.level; i++ {
-		if update[i].level[i].forward == x {
-			update[i].level[i].span += x.level[i].span - 1
-			update[i].level[i].forward = x.level[i].forward
-		} else {
-			update[i].level[i].span -= 1
-		}
-	}
-	if x.level[0].forward != nil {
-		x.level[0].forward.backward = x.backward
-	} else {
-		sl.tail = x.backward
-	}
-	for sl.level > 1 && sl.header.level[sl.level-1].forward == nil {
-		sl.level--
-	}
-	sl.length--
-	delete(sl.dict, x.hash)
+	_ = "STUB: not implemented"
+	return
 }
 
 // delete removes an element with matching score/key from the skiplist.
-func (sl *SkipList) delete(score SCORE, hash uint32) bool {
-	var update [SkipListMaxLevel]*SkipListNode
+func (sl *SkipList) delete(score SCORE, hash uint32) bool { _ = "STUB: not implemented"; return false }
 
-	targetNode := sl.dict[hash]
+/* We may have multiple elements with the same score, what we need
+ * is to find the element with both the right score and object. */
 
-	x := sl.header
-	for i := sl.level - 1; i >= 0; i-- {
-		for x.level[i].forward != nil &&
-			(x.level[i].forward.score < score ||
-				(x.level[i].forward.score == score &&
-					sl.cmp(x.level[i].forward.record, targetNode.record) < 0)) {
-			x = x.level[i].forward
-		}
-		update[i] = x
-	}
-	/* We may have multiple elements with the same score, what we need
-	 * is to find the element with both the right score and object. */
-	x = x.level[0].forward
-	if x != nil && score == x.score && sl.cmp(x.record, targetNode.record) == 0 {
-		sl.deleteNode(x, update)
-		// free x
-		return true
-	}
-	return false /* not found */
-}
+// free x
+
+/* not found */
 
 // Size returns the number of elements in the SkipList.
-func (sl *SkipList) Size() int {
-	return int(sl.length)
-}
+func (sl *SkipList) Size() int { _ = "STUB: not implemented"; return 0 }
 
 // PeekMin returns the element with minimum score, nil if the set is empty.
 //
 // Time complexity of this method is : O(log(N)).
-func (sl *SkipList) PeekMin() *SkipListNode {
-	return sl.header.level[0].forward
-}
+func (sl *SkipList) PeekMin() *SkipListNode { _ = "STUB: not implemented"; return nil }
 
 // PopMin returns and remove the element with minimal score, nil if the set is empty.
 //
 // Time complexity of this method is : O(log(N)).
-func (sl *SkipList) PopMin() *SkipListNode {
-	x := sl.header.level[0].forward
-	if x != nil {
-		sl.Remove(x.hash)
-	}
-	return x
-}
+func (sl *SkipList) PopMin() *SkipListNode { _ = "STUB: not implemented"; return nil }
 
 // PeekMax returns the element with maximum score, nil if the set is empty.
 //
 // Time Complexity : O(1).
 func (sl *SkipList) PeekMax() *SkipListNode {
-	return sl.tail
+	_ = "STUB: not implemented"
+
+	// PopMax returns and remove the element with maximum score, nil if the set is empty.
+	//
+	// Time complexity of this method is : O(log(N)).
+	return nil
 }
 
-// PopMax returns and remove the element with maximum score, nil if the set is empty.
-//
-// Time complexity of this method is : O(log(N)).
-func (sl *SkipList) PopMax() *SkipListNode {
-	x := sl.tail
-	if x != nil {
-		sl.Remove(x.hash)
-	}
-	return x
-}
+func (sl *SkipList) PopMax() *SkipListNode { _ = "STUB: not implemented"; return nil }
 
 // Put puts an element into the sorted set with specific key / value / score.
 //
 // Time complexity of this method is : O(log(N)).
 func (sl *SkipList) Put(score SCORE, value []byte, record *core.Record) error {
-	var newNode *SkipListNode
-
-	hash, _ := utils.GetFnv32(value)
-
-	if n, ok := sl.dict[hash]; ok {
-		// score does not change, only update value
-		if n.score != score { // score changes, delete and re-insert
-			sl.delete(n.score, n.hash)
-			newNode = sl.insertNode(score, hash, record)
-		}
-	} else {
-		newNode = sl.insertNode(score, hash, record)
-	}
-
-	if newNode != nil {
-		sl.dict[hash] = newNode
-	}
-
+	_ = "STUB: not implemented"
 	return nil
 }
+
+// score does not change, only update value
+// score changes, delete and re-insert
 
 // Remove removes element specified at given key.
 //
 // Time complexity of this method is : O(log(N)).
-func (sl *SkipList) Remove(hash uint32) *SkipListNode {
-	found := sl.dict[hash]
-	if found != nil {
-		sl.delete(found.score, hash)
-		return found
-	}
-	return nil
-}
+func (sl *SkipList) Remove(hash uint32) *SkipListNode { _ = "STUB: not implemented"; return nil }
 
 // GetByScoreRangeOptions represents the options of the GetByScoreRange function.
 type GetByScoreRangeOptions struct {
@@ -560,117 +274,27 @@ type GetByScoreRangeOptions struct {
 //
 // Time complexity of this method is : O(log(N)).
 func (sl *SkipList) GetByScoreRange(start SCORE, end SCORE, options *GetByScoreRangeOptions) []*SkipListNode {
-	limit := 1<<31 - 1
-	if options != nil && options.Limit > 0 {
-		limit = options.Limit
-	}
-
-	excludeStart := options != nil && options.ExcludeStart
-	excludeEnd := options != nil && options.ExcludeEnd
-	reverse := start > end
-	if reverse {
-		start, end = end, start
-		excludeStart, excludeEnd = excludeEnd, excludeStart
-	}
-
-	var nodes []*SkipListNode
-
-	// determine if out of range
-	if sl.length == 0 {
-		return nodes
-	}
-
-	if reverse {
-		// search from end to start
-		return sl.searchReverse(nodes, excludeStart, excludeEnd, start, end, limit)
-	}
-	// search from start to end
-	return sl.searchForward(nodes, excludeStart, excludeEnd, start, end, limit)
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// determine if out of range
+
+// search from end to start
+
+// search from start to end
 
 func (sl *SkipList) searchForward(nodes []*SkipListNode, excludeStart, excludeEnd bool, start, end SCORE, limit int) []*SkipListNode {
+	_ = "STUB: not implemented"
 	// search from start to end
-	x := sl.header
-	if excludeStart {
-		for i := sl.level - 1; i >= 0; i-- {
-			for x.level[i].forward != nil &&
-				x.level[i].forward.score <= start {
-				x = x.level[i].forward
-			}
-		}
-	} else {
-		for i := sl.level - 1; i >= 0; i-- {
-			for x.level[i].forward != nil &&
-				x.level[i].forward.score < start {
-				x = x.level[i].forward
-			}
-		}
-	}
-
-	/* Current node is the last with score < or <= start. */
-	x = x.level[0].forward
-
-	for x != nil && limit > 0 {
-		if excludeEnd {
-			if x.score >= end {
-				break
-			}
-		} else {
-			if x.score > end {
-				break
-			}
-		}
-
-		next := x.level[0].forward
-
-		nodes = append(nodes, x)
-		limit--
-
-		x = next
-	}
-
-	return nodes
+	return nil
 }
 
+/* Current node is the last with score < or <= start. */
+
 func (sl *SkipList) searchReverse(nodes []*SkipListNode, excludeStart, excludeEnd bool, start, end SCORE, limit int) []*SkipListNode {
-	x := sl.header
-
-	if excludeEnd {
-		for i := sl.level - 1; i >= 0; i-- {
-			for x.level[i].forward != nil &&
-				x.level[i].forward.score < end {
-				x = x.level[i].forward
-			}
-		}
-	} else {
-		for i := sl.level - 1; i >= 0; i-- {
-			for x.level[i].forward != nil &&
-				x.level[i].forward.score <= end {
-				x = x.level[i].forward
-			}
-		}
-	}
-
-	for x != nil && limit > 0 {
-		if excludeStart {
-			if x.score <= start {
-				break
-			}
-		} else {
-			if x.score < start {
-				break
-			}
-		}
-
-		next := x.backward
-
-		nodes = append(nodes, x)
-		limit--
-
-		x = next
-	}
-
-	return nodes
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetByRankRange returns nodes within specific rank range [start, end].
@@ -680,74 +304,15 @@ func (sl *SkipList) searchReverse(nodes []*SkipListNode, excludeStart, excludeEn
 //
 // Time complexity of this method is : O(log(N)).
 func (sl *SkipList) GetByRankRange(start, end int, remove bool) []*SkipListNode {
-	var (
-		update    [SkipListMaxLevel]*SkipListNode
-		nodes     []*SkipListNode
-		traversed int
-	)
-
-	start, end = sl.sanitizeIndexes(start, end)
-
-	reverse := start > end
-	if reverse { // swap start and end
-		start, end = end, start
-	}
-
-	traversed = 0
-	x := sl.header
-	for i := sl.level - 1; i >= 0; i-- {
-		for x.level[i].forward != nil &&
-			traversed+int(x.level[i].span) < start {
-			traversed += int(x.level[i].span)
-			x = x.level[i].forward
-		}
-		if remove {
-			update[i] = x
-		} else {
-			if traversed+1 == start {
-				break
-			}
-		}
-	}
-
-	traversed++
-	x = x.level[0].forward
-	for x != nil && traversed <= end {
-		next := x.level[0].forward
-
-		nodes = append(nodes, x)
-
-		if remove {
-			sl.deleteNode(x, update)
-		}
-
-		traversed++
-		x = next
-	}
-
-	if reverse {
-		for i, j := 0, len(nodes)-1; i < j; i, j = i+1, j-1 {
-			nodes[i], nodes[j] = nodes[j], nodes[i]
-		}
-	}
-	return nodes
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (sl *SkipList) sanitizeIndexes(start, end int) (newStart, newEnd int) {
-	if start < 0 {
-		start = int(sl.length) + start + 1
-	}
-	if end < 0 {
-		end = int(sl.length) + end + 1
-	}
-	if start <= 0 {
-		start = 1
-	}
-	if end <= 0 {
-		end = 1
-	}
+// swap start and end
 
-	return start, end
+func (sl *SkipList) sanitizeIndexes(start, end int) (newStart, newEnd int) {
+	_ = "STUB: not implemented"
+	return 0, 0
 }
 
 // GetByRank returns the node at given rank.
@@ -757,10 +322,7 @@ func (sl *SkipList) sanitizeIndexes(start, end int) (newStart, newEnd int) {
 //
 // Time complexity of this method is : O(log(N)).
 func (sl *SkipList) GetByRank(rank int, remove bool) *SkipListNode {
-	nodes := sl.GetByRankRange(rank, rank, remove)
-	if len(nodes) == 1 {
-		return nodes[0]
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
@@ -768,47 +330,14 @@ func (sl *SkipList) GetByRank(rank int, remove bool) *SkipListNode {
 // If node is not found, nil is returned
 //
 // Time complexity : O(1).
-func (sl *SkipList) GetByValue(value []byte) *SkipListNode {
-	hash, _ := utils.GetFnv32(value)
-	return sl.dict[hash]
-}
+func (sl *SkipList) GetByValue(value []byte) *SkipListNode { _ = "STUB: not implemented"; return nil }
 
 // FindRank Returns the rank of member in the sorted set stored at key, with the scores ordered from low to high.
 // Note that the rank is 1-based integer. Rank 1 means the first node
 // If the node is not found, 0 is returned. Otherwise rank(> 0) is returned.
 //
 // Time complexity of this method is : O(log(N)).
-func (sl *SkipList) FindRank(hash uint32) int {
-	rank := 0
-	targetNode := sl.dict[hash]
-	if targetNode != nil {
-		x := sl.header
-		for i := sl.level - 1; i >= 0; i-- {
-			for x.level[i].forward != nil &&
-				(x.level[i].forward.score < targetNode.score ||
-					(x.level[i].forward.score == targetNode.score &&
-						sl.cmp(x.level[i].forward.record, targetNode.record) <= 0)) {
-				rank += int(x.level[i].span)
-				x = x.level[i].forward
-			}
-
-			if x.hash == hash {
-				return rank
-			}
-		}
-	}
-	return 0
-}
+func (sl *SkipList) FindRank(hash uint32) int { _ = "STUB: not implemented"; return 0 }
 
 // FindRevRank Returns the rank of member in the sorted set stored at key, with the scores ordered from high to low.
-func (sl *SkipList) FindRevRank(hash uint32) int {
-	if sl.length == 0 {
-		return 0
-	}
-
-	if _, ok := sl.dict[hash]; !ok {
-		return 0
-	}
-
-	return sl.Size() - sl.FindRank(hash) + 1
-}
+func (sl *SkipList) FindRevRank(hash uint32) int { _ = "STUB: not implemented"; return 0 }

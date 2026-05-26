@@ -15,65 +15,10 @@
 package utils
 
 import (
-	"archive/tar"
-	"compress/gzip"
 	"io"
-	"os"
-	"path/filepath"
-	"strings"
 )
 
-func TarGZCompress(dst io.Writer, src string) error {
-	gz := gzip.NewWriter(dst)
-	defer func() { _ = gz.Close() }()
-	return TarCompress(gz, src)
-}
+func TarGZCompress(dst io.Writer, src string) error { _ = "STUB: not implemented"; return nil }
 
 // https://blog.ralch.com/articles/golang-working-with-tar-and-gzip
-func TarCompress(dst io.Writer, src string) error {
-	tarball := tar.NewWriter(dst)
-	defer func() { _ = tarball.Close() }()
-
-	info, err := os.Stat(src)
-	if err != nil {
-		return nil
-	}
-
-	var baseDir string
-	if info.IsDir() {
-		baseDir = filepath.Base(src)
-	}
-
-	return filepath.Walk(src,
-		func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-
-			header, err := tar.FileInfoHeader(info, info.Name())
-			if err != nil {
-				return err
-			}
-
-			if baseDir != "" {
-				header.Name = filepath.Join(baseDir, strings.TrimPrefix(path, src))
-			}
-
-			if err := tarball.WriteHeader(header); err != nil {
-				return err
-			}
-
-			if info.IsDir() {
-				return nil
-			}
-
-			file, err := os.Open(filepath.Clean(path))
-			if err != nil {
-				return err
-			}
-
-			defer func() { _ = file.Close() }()
-			_, err = io.Copy(tarball, file)
-			return err
-		})
-}
+func TarCompress(dst io.Writer, src string) error { _ = "STUB: not implemented"; return nil }

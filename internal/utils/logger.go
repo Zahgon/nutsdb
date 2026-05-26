@@ -16,20 +16,10 @@ type defaultPrintLogger struct {
 	l *log.Logger
 }
 
-func (dpl *defaultPrintLogger) Printf(fmt string, args ...any) {
-	dpl.l.Printf(fmt, args...)
-}
+func (dpl *defaultPrintLogger) Printf(fmt string, args ...any) { _ = "STUB: not implemented"; return }
 
-func defaultLogger() ILogger {
-	return &defaultPrintLogger{
-		l: log.Default(),
-	}
-}
+func defaultLogger() ILogger { _ = "STUB: not implemented"; return *new(ILogger) }
 
-func SetLogger(logger ILogger) {
-	printLoggerInstance = logger
-}
+func SetLogger(logger ILogger) { _ = "STUB: not implemented"; return }
 
-func GetLogger() ILogger {
-	return printLoggerInstance
-}
+func GetLogger() ILogger { _ = "STUB: not implemented"; return *new(ILogger) }

@@ -15,10 +15,8 @@
 package data
 
 import (
-	"bytes"
 	"container/list"
 	"math"
-	"regexp"
 
 	"github.com/nutsdb/nutsdb/internal/core"
 )
@@ -36,265 +34,107 @@ type DoublyLinkedList struct {
 }
 
 // NewDoublyLinkedList creates a new doubly linked list
-func NewDoublyLinkedList() *DoublyLinkedList {
-	return &DoublyLinkedList{
-		list: list.New(),
-	}
-}
+func NewDoublyLinkedList() *DoublyLinkedList { _ = "STUB: not implemented"; return nil }
 
 // InsertRecord inserts a record with the given key in sorted order by key (sequence number).
 // Optimized for head/tail insertions (LPush/RPush pattern).
 // Warning: Middle insertions require O(n) traversal. Check for duplicates requires O(n) scan.
 func (dll *DoublyLinkedList) InsertRecord(key []byte, record *core.Record) bool {
-	newElem := &core.Item[core.Record]{
-		Key:    key,
-		Record: record,
-	}
-
-	// Empty list - just insert
-	if dll.list.Len() == 0 {
-		dll.list.PushBack(newElem)
-		return false
-	}
-
-	// Check if inserting at head or tail (common case for List operations)
-	front := dll.list.Front().Value.(*core.Item[core.Record])
-	back := dll.list.Back().Value.(*core.Item[core.Record])
-
-	// Check for duplicate at head
-	if bytes.Equal(key, front.Key) {
-		front.Record = record
-		return true
-	}
-
-	// Insert at head if key is smaller than front
-	if bytes.Compare(key, front.Key) < 0 {
-		dll.list.PushFront(newElem)
-		return false
-	}
-
-	// Check for duplicate at tail
-	if bytes.Equal(key, back.Key) {
-		back.Record = record
-		return true
-	}
-
-	// Insert at tail if key is larger than back
-	if bytes.Compare(key, back.Key) > 0 {
-		dll.list.PushBack(newElem)
-		return false
-	}
-
-	// Middle insertion: find the correct position (O(n) operation)
-	// This should be rare in typical List usage patterns
-	for e := dll.list.Front(); e != nil; e = e.Next() {
-		elem := e.Value.(*core.Item[core.Record])
-		cmp := bytes.Compare(key, elem.Key)
-
-		if cmp == 0 {
-			// Update existing element
-			elem.Record = record
-			return true
-		}
-
-		if cmp < 0 {
-			// Insert before current element
-			dll.list.InsertBefore(newElem, e)
-			return false
-		}
-	}
-
-	// Fallback (shouldn't reach here given the checks above)
-	dll.list.PushBack(newElem)
+	_ = "STUB: not implemented"
 	return false
 }
+
+// Empty list - just insert
+
+// Check if inserting at head or tail (common case for List operations)
+
+// Check for duplicate at head
+
+// Insert at head if key is smaller than front
+
+// Check for duplicate at tail
+
+// Insert at tail if key is larger than back
+
+// Middle insertion: find the correct position (O(n) operation)
+// This should be rare in typical List usage patterns
+
+// Update existing element
+
+// Insert before current element
+
+// Fallback (shouldn't reach here given the checks above)
 
 // Delete removes a node with the given key.
 // Warning: This is an O(n) operation since we don't maintain an index.
 // For List use cases, prefer PopMin/PopMax for head/tail deletions.
-func (dll *DoublyLinkedList) Delete(key []byte) bool {
-	for e := dll.list.Front(); e != nil; e = e.Next() {
-		elem := e.Value.(*core.Item[core.Record])
-		if bytes.Equal(elem.Key, key) {
-			dll.list.Remove(e)
-			return true
-		}
-	}
-	return false
-}
+func (dll *DoublyLinkedList) Delete(key []byte) bool { _ = "STUB: not implemented"; return false }
 
 // Find returns the record with the given key.
 // Warning: This is an O(n) operation since we don't maintain an index.
 func (dll *DoublyLinkedList) Find(key []byte) (*core.Record, bool) {
-	for e := dll.list.Front(); e != nil; e = e.Next() {
-		elem := e.Value.(*core.Item[core.Record])
-		if bytes.Equal(elem.Key, key) {
-			return elem.Record, true
-		}
-	}
+	_ = "STUB: not implemented"
 	return nil, false
 }
 
 // Min returns the first element (smallest key)
 func (dll *DoublyLinkedList) Min() (*core.Item[core.Record], bool) {
-	front := dll.list.Front()
-	if front == nil {
-		return nil, false
-	}
-	elem := front.Value.(*core.Item[core.Record])
-	return &core.Item[core.Record]{
-		Key:    elem.Key,
-		Record: elem.Record,
-	}, true
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 // Max returns the last element (largest key)
 func (dll *DoublyLinkedList) Max() (*core.Item[core.Record], bool) {
-	back := dll.list.Back()
-	if back == nil {
-		return nil, false
-	}
-	elem := back.Value.(*core.Item[core.Record])
-	return &core.Item[core.Record]{
-		Key:    elem.Key,
-		Record: elem.Record,
-	}, true
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 // PopMin removes and returns the first element
 func (dll *DoublyLinkedList) PopMin() (*core.Item[core.Record], bool) {
-	front := dll.list.Front()
-	if front == nil {
-		return nil, false
-	}
-
-	elem := front.Value.(*core.Item[core.Record])
-	dll.list.Remove(front)
-
-	// Construct result - keep fields in same order as PopMax for consistency
-	return &core.Item[core.Record]{
-		Key:    elem.Key,
-		Record: elem.Record,
-	}, true
+	_ = "STUB: not implemented"
+	return nil, false
 }
+
+// Construct result - keep fields in same order as PopMax for consistency
 
 // PopMax removes and returns the last element
 func (dll *DoublyLinkedList) PopMax() (*core.Item[core.Record], bool) {
-	back := dll.list.Back()
-	if back == nil {
-		return nil, false
-	}
-
-	elem := back.Value.(*core.Item[core.Record])
-	dll.list.Remove(back)
-
-	return &core.Item[core.Record]{
-		Key:    elem.Key,
-		Record: elem.Record,
-	}, true
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 // All returns all records in order
-func (dll *DoublyLinkedList) All() []*core.Record {
-	records := make([]*core.Record, 0, dll.list.Len())
-	for e := dll.list.Front(); e != nil; e = e.Next() {
-		elem := e.Value.(*core.Item[core.Record])
-		records = append(records, elem.Record)
-	}
-	return records
-}
+func (dll *DoublyLinkedList) All() []*core.Record { _ = "STUB: not implemented"; return nil }
 
 // AllItems returns all items in order
 func (dll *DoublyLinkedList) AllItems() []*core.Item[core.Record] {
-	items := make([]*core.Item[core.Record], 0, dll.list.Len())
-	for e := dll.list.Front(); e != nil; e = e.Next() {
-		elem := e.Value.(*core.Item[core.Record])
-		items = append(items, &core.Item[core.Record]{
-			Key:    elem.Key,
-			Record: elem.Record,
-		})
-	}
-	return items
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Count returns the number of elements
-func (dll *DoublyLinkedList) Count() int {
-	return dll.list.Len()
-}
+func (dll *DoublyLinkedList) Count() int { _ = "STUB: not implemented"; return 0 }
 
 // Range returns records within the given key range [start, end]
 func (dll *DoublyLinkedList) Range(start, end []byte) []*core.Record {
-	records := make([]*core.Record, 0)
-
-	for e := dll.list.Front(); e != nil; e = e.Next() {
-		elem := e.Value.(*core.Item[core.Record])
-		if bytes.Compare(elem.Key, start) >= 0 && bytes.Compare(elem.Key, end) <= 0 {
-			records = append(records, elem.Record)
-		}
-		if bytes.Compare(elem.Key, end) > 0 {
-			break
-		}
-	}
-
-	return records
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PrefixScan scans records with the given prefix
 func (dll *DoublyLinkedList) PrefixScan(prefix []byte, offset, limitNum int) []*core.Record {
-	records := make([]*core.Record, 0)
-
-	for e := dll.list.Front(); e != nil; e = e.Next() {
-		elem := e.Value.(*core.Item[core.Record])
-		if bytes.HasPrefix(elem.Key, prefix) {
-			if offset > 0 {
-				offset--
-			} else {
-				records = append(records, elem.Record)
-				limitNum--
-				if limitNum == 0 {
-					break
-				}
-			}
-		}
-	}
-
-	return records
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PrefixSearchScan scans records with the given prefix and regex pattern
 func (dll *DoublyLinkedList) PrefixSearchScan(prefix []byte, reg string, offset, limitNum int) []*core.Record {
-	records := make([]*core.Record, 0)
-	rgx, err := regexp.Compile(reg)
-	if err != nil {
-		return records
-	}
-
-	for e := dll.list.Front(); e != nil; e = e.Next() {
-		elem := e.Value.(*core.Item[core.Record])
-		if !bytes.HasPrefix(elem.Key, prefix) {
-			continue
-		}
-
-		if offset > 0 {
-			offset--
-			continue
-		}
-
-		if !rgx.Match(bytes.TrimPrefix(elem.Key, prefix)) {
-			continue
-		}
-
-		records = append(records, elem.Record)
-		limitNum--
-		if limitNum == 0 {
-			break
-		}
-	}
-
-	return records
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Insert is an alias for InsertRecord (for compatibility with BTree interface)
 func (dll *DoublyLinkedList) Insert(record *core.Record) bool {
-	return dll.InsertRecord(record.Key, record)
+	_ = "STUB: not implemented"
+	return false
 }

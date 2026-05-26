@@ -54,31 +54,8 @@ func main() {
 	get("key") // get value: 'valuemore value'
 }
 
-func get(key string) {
-	if err := db.View(func(tx *nutsdb.Tx) error {
-		value, err := tx.Get(bucket, []byte(key))
-		if err != nil {
-			return err
-		}
-		log.Printf("get value: '%s'", string(value))
-		return nil
-	}); err != nil {
-		log.Println(err)
-	}
-}
+func get(key string) { _ = "STUB: not implemented"; return }
 
-func put(key, value string) {
-	if err := db.Update(func(tx *nutsdb.Tx) error {
-		return tx.Put(bucket, []byte(key), []byte(value), nutsdb.Persistent)
-	}); err != nil {
-		log.Println(err)
-	}
-}
+func put(key, value string) { _ = "STUB: not implemented"; return }
 
-func append(key, appendage string) {
-	if err := db.Update(func(tx *nutsdb.Tx) error {
-		return tx.Append(bucket, []byte(key), []byte(appendage))
-	}); err != nil {
-		log.Println(err)
-	}
-}
+func append(key, appendage string) { _ = "STUB: not implemented"; return }

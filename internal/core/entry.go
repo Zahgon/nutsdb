@@ -15,13 +15,8 @@
 package core
 
 import (
-	"bytes"
 	"encoding/binary"
 	"errors"
-	"hash/crc32"
-
-	"github.com/nutsdb/nutsdb/internal/utils"
-	"github.com/xujiajun/utils/strconv2"
 )
 
 var (
@@ -53,9 +48,7 @@ type (
 )
 
 // Size returns the size of the entry.
-func (e *Entry) Size() int64 {
-	return e.Meta.Size() + int64(e.Meta.KeySize+e.Meta.ValueSize)
-}
+func (e *Entry) Size() int64 { _ = "STUB: not implemented"; return 0 }
 
 // Encode returns the slice after the entry be encoded.
 //
@@ -65,213 +58,77 @@ func (e *Entry) Size() int64 {
 //	|----------------------------------------------------------------------------------------------------------|
 //	| uint32| uint64  |uint32 |  uint32 | uint16  | uint32| uint16 | uint16 |uint64 | uint64 | []byte | []byte |
 //	|----------------------------------------------------------------------------------------------------------|
-func (e *Entry) Encode() []byte {
-	keySize := e.Meta.KeySize
-	valueSize := e.Meta.ValueSize
-
-	buf := make([]byte, MaxEntryHeaderSize+keySize+valueSize)
-
-	index := e.setEntryHeaderBuf(buf)
-	copy(buf[index:], e.Key)
-	index += int(keySize)
-	copy(buf[index:], e.Value)
-	index += int(valueSize)
-
-	buf = buf[:index]
-
-	c32 := crc32.ChecksumIEEE(buf[4:])
-	binary.LittleEndian.PutUint32(buf[0:4], c32)
-
-	return buf
-}
+func (e *Entry) Encode() []byte { _ = "STUB: not implemented"; return nil }
 
 // setEntryHeaderBuf sets the entry header buff.
-func (e *Entry) setEntryHeaderBuf(buf []byte) int {
-	index := 4
-
-	index += binary.PutUvarint(buf[index:], e.Meta.Timestamp)
-	index += binary.PutUvarint(buf[index:], uint64(e.Meta.KeySize))
-	index += binary.PutUvarint(buf[index:], uint64(e.Meta.ValueSize))
-	index += binary.PutUvarint(buf[index:], uint64(e.Meta.Flag))
-	index += binary.PutUvarint(buf[index:], uint64(e.Meta.TTL))
-	index += binary.PutUvarint(buf[index:], uint64(e.Meta.Status))
-	index += binary.PutUvarint(buf[index:], uint64(e.Meta.Ds))
-	index += binary.PutUvarint(buf[index:], e.Meta.TxID)
-	index += binary.PutUvarint(buf[index:], e.Meta.BucketId)
-
-	return index
-}
+func (e *Entry) setEntryHeaderBuf(buf []byte) int { _ = "STUB: not implemented"; return 0 }
 
 // IsZero checks if the entry is zero or not.
-func (e *Entry) IsZero() bool {
-	if e.Meta.Crc == 0 && e.Meta.KeySize == 0 && e.Meta.ValueSize == 0 && e.Meta.Timestamp == 0 {
-		return true
-	}
-	return false
-}
+func (e *Entry) IsZero() bool { _ = "STUB: not implemented"; return false }
 
 // GetCrc returns the crc at given buf slice.
-func (e *Entry) GetCrc(buf []byte) uint32 {
-	crc := crc32.ChecksumIEEE(buf[4:])
-	crc = crc32.Update(crc, crc32.IEEETable, e.Key)
-	crc = crc32.Update(crc, crc32.IEEETable, e.Value)
-
-	return crc
-}
+func (e *Entry) GetCrc(buf []byte) uint32 { _ = "STUB: not implemented"; return 0 }
 
 // ParsePayload means this function will parse a byte array to bucket, key, size of an entry
-func (e *Entry) ParsePayload(data []byte) error {
-	meta := e.Meta
-	keyLowBound := 0
-	keyHighBound := meta.KeySize
-	valueLowBound := keyHighBound
-	valueHighBound := meta.KeySize + meta.ValueSize
+func (e *Entry) ParsePayload(data []byte) error { _ = "STUB: not implemented"; return nil }
 
-	// parse key
-	e.Key = data[keyLowBound:keyHighBound]
-	// parse value
-	e.Value = data[valueLowBound:valueHighBound]
-	return nil
-}
+// parse key
+
+// parse value
 
 // CheckPayloadSize checks the payload size
-func (e *Entry) CheckPayloadSize(size int64) error {
-	if e.Meta.PayloadSize() != size {
-		return ErrPayLoadSizeMismatch
-	}
-	return nil
-}
+func (e *Entry) CheckPayloadSize(size int64) error { _ = "STUB: not implemented"; return nil }
 
 // ParseMeta parse Meta object to entry
 func (e *Entry) ParseMeta(buf []byte) (int64, error) {
+	_ = "STUB: not implemented"
 	// If the length of the header is less than MinEntryHeaderSize,
 	// it means that the final remaining capacity of the file is not enough to write a record,
 	// and an error needs to be returned.
-	if len(buf) < MinEntryHeaderSize {
-		return 0, ErrHeaderSizeOutOfBounds
-	}
-
-	e.Meta = NewMetaData()
-
-	e.Meta.WithCrc(binary.LittleEndian.Uint32(buf[0:4]))
-
-	index := 4
-
-	timestamp, n := binary.Uvarint(buf[index:])
-	index += n
-	keySize, n := binary.Uvarint(buf[index:])
-	index += n
-	valueSize, n := binary.Uvarint(buf[index:])
-	index += n
-	flag, n := binary.Uvarint(buf[index:])
-	index += n
-	ttl, n := binary.Uvarint(buf[index:])
-	index += n
-	status, n := binary.Uvarint(buf[index:])
-	index += n
-	ds, n := binary.Uvarint(buf[index:])
-	index += n
-	txId, n := binary.Uvarint(buf[index:])
-	index += n
-	bucketId, n := binary.Uvarint(buf[index:])
-	index += n
-
-	e.Meta.
-		WithTimeStamp(timestamp).
-		WithKeySize(uint32(keySize)).
-		WithValueSize(uint32(valueSize)).
-		WithFlag(uint16(flag)).
-		WithTTL(uint32(ttl)).
-		WithStatus(uint16(status)).
-		WithDs(uint16(ds)).
-		WithTxID(txId).
-		WithBucketId(bucketId)
-
-	return int64(index), nil
+	return 0, nil
 }
 
 // IsFilter to confirm if this entry is can be filtered
-func (e *Entry) IsFilter() bool {
-	meta := e.Meta
-	var filterDataSet = []uint16{
-		DataDeleteFlag,
-		DataRPopFlag,
-		DataLPopFlag,
-		DataLRemFlag,
-		DataLTrimFlag,
-		DataZRemFlag,
-		DataZRemRangeByRankFlag,
-		DataZPopMaxFlag,
-		DataZPopMinFlag,
-		DataLRemByIndex,
-	}
-	return utils.OneOfUint16Array(meta.Flag, filterDataSet)
-}
+func (e *Entry) IsFilter() bool { _ = "STUB: not implemented"; return false }
 
 // Valid check the entry fields valid or not
-func (e *Entry) Valid() error {
-	if len(e.Key) == 0 {
-		return ErrKeyEmpty
-	}
-	// Note: MAX_SIZE will be re-exported from root package for backward compatibility
-	// For now, we'll use a reasonable default that works on both 32-bit and 64-bit systems
-	const maxSize = 1 << 30 // 1GB, reasonable for most use cases
-	if len(e.Key) > maxSize || len(e.Value) > maxSize {
-		return ErrDataSizeExceed
-	}
-	return nil
-}
+func (e *Entry) Valid() error { _ = "STUB: not implemented"; return nil }
+
+// Note: MAX_SIZE will be re-exported from root package for backward compatibility
+// For now, we'll use a reasonable default that works on both 32-bit and 64-bit systems
+// 1GB, reasonable for most use cases
 
 // NewEntry new Entry Object
 func NewEntry() *Entry {
-	return new(Entry)
+	_ = "STUB: not implemented"
+
+	// WithKey set key to Entry
+	return nil
 }
 
-// WithKey set key to Entry
-func (e *Entry) WithKey(key []byte) *Entry {
-	e.Key = key
-	return e
-}
+func (e *Entry) WithKey(key []byte) *Entry { _ = "STUB: not implemented"; return nil }
 
 // WithValue set value to Entry
-func (e *Entry) WithValue(value []byte) *Entry {
-	e.Value = value
-	return e
-}
+func (e *Entry) WithValue(value []byte) *Entry { _ = "STUB: not implemented"; return nil }
 
 // WithMeta set Meta to Entry
-func (e *Entry) WithMeta(meta *MetaData) *Entry {
-	e.Meta = meta
-	return e
-}
+func (e *Entry) WithMeta(meta *MetaData) *Entry { _ = "STUB: not implemented"; return nil }
 
 // GetTxIDBytes return the bytes of TxID
-func (e *Entry) GetTxIDBytes() []byte {
-	return []byte(strconv2.Int64ToStr(int64(e.Meta.TxID)))
-}
+func (e *Entry) GetTxIDBytes() []byte { _ = "STUB: not implemented"; return nil }
 
-func (e *Entry) IsBelongsToBTree() bool {
-	return e.Meta.IsBTree()
-}
+func (e *Entry) IsBelongsToBTree() bool { _ = "STUB: not implemented"; return false }
 
 // IsBelongsToBPlusTree is kept for backward compatibility with legacy naming.
 // Internally nutsdb uses a B+ tree implementation for primary indexes, so both
 // helpers map to the same metadata flag.
-func (e *Entry) IsBelongsToBPlusTree() bool {
-	return e.IsBelongsToBTree()
-}
+func (e *Entry) IsBelongsToBPlusTree() bool { _ = "STUB: not implemented"; return false }
 
-func (e *Entry) IsBelongsToList() bool {
-	return e.Meta.IsList()
-}
+func (e *Entry) IsBelongsToList() bool { _ = "STUB: not implemented"; return false }
 
-func (e *Entry) IsBelongsToSet() bool {
-	return e.Meta.IsSet()
-}
+func (e *Entry) IsBelongsToSet() bool { _ = "STUB: not implemented"; return false }
 
-func (e *Entry) IsBelongsToSortSet() bool {
-	return e.Meta.IsSortSet()
-}
+func (e *Entry) IsBelongsToSortSet() bool { _ = "STUB: not implemented"; return false }
 
 type EntryWhenRecovery struct {
 	Entry
@@ -285,18 +142,11 @@ type DataInTx struct {
 	StartOff int64
 }
 
-func (dt *DataInTx) IsSameTx(e *EntryWhenRecovery) bool {
-	return dt.TxId == e.Meta.TxID
-}
+func (dt *DataInTx) IsSameTx(e *EntryWhenRecovery) bool { _ = "STUB: not implemented"; return false }
 
-func (dt *DataInTx) AppendEntry(e *EntryWhenRecovery) {
-	dt.Es = append(dt.Es, e)
-}
+func (dt *DataInTx) AppendEntry(e *EntryWhenRecovery) { _ = "STUB: not implemented"; return }
 
-func (dt *DataInTx) Reset() {
-	dt.Es = make([]*EntryWhenRecovery, 0)
-	dt.TxId = 0
-}
+func (dt *DataInTx) Reset() { _ = "STUB: not implemented"; return }
 
 /**
  * decode the key of the entry
@@ -306,36 +156,4 @@ func (dt *DataInTx) Reset() {
  * so we need to decode the key to get the raw key
  * 3. All other cases, the key is the raw key
  */
-func (entry *Entry) GetRawKey() ([]byte, error) {
-	key := entry.Key
-
-	switch entry.Meta.Ds {
-	case DataStructureList:
-		if entry.Meta.Flag != DataLPushFlag && entry.Meta.Flag != DataRPushFlag {
-			return key, nil
-		}
-
-		if len(key) < 8 {
-			return key, ErrInvalidKey
-		}
-
-		return key[8:], nil
-	case DataStructureSortedSet:
-		if entry.Meta.Flag != DataZAddFlag {
-			return key, nil
-		}
-
-		strList := bytes.Split(key, []byte(SeparatorForZSetKey))
-		if len(strList) != 2 {
-			return key, ErrInvalidKey
-		}
-
-		return []byte(strList[0]), nil
-	case DataStructureSet:
-		return key, nil
-	case DataStructureBTree:
-		return key, nil
-	default:
-		return key, ErrDataStructureNotSupported
-	}
-}
+func (entry *Entry) GetRawKey() ([]byte, error) { _ = "STUB: not implemented"; return nil, nil }

@@ -36,107 +36,26 @@ type IteratorOptions struct {
 // Returns a new iterator.
 // The Release method must be called when finished with the iterator.
 func NewIterator(tx *Tx, bucket string, options IteratorOptions) *Iterator {
-	b, err := tx.db.bucketMgr.GetBucket(DataStructureBTree, bucket)
-	if err != nil {
-		return nil
-	}
-	iterator := &Iterator{
-		tx:      tx,
-		options: options,
-		iter:    tx.db.Index.BTree.GetWithDefault(b.Id).Iter(),
-	}
-
-	// Initialize position and cache the first item
-	if options.Reverse {
-		iterator.valid = iterator.iter.Last()
-	} else {
-		iterator.valid = iterator.iter.First()
-	}
-
-	if iterator.valid {
-		iterator.currentItem = iterator.iter.Item()
-	}
-
-	return iterator
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (it *Iterator) Rewind() bool {
-	if it.options.Reverse {
-		it.valid = it.iter.Last()
-	} else {
-		it.valid = it.iter.First()
-	}
+// Initialize position and cache the first item
 
-	if it.valid {
-		it.currentItem = it.iter.Item()
-	} else {
-		it.currentItem = nil
-	}
+func (it *Iterator) Rewind() bool { _ = "STUB: not implemented"; return false }
 
-	return it.valid
-}
+func (it *Iterator) Seek(key []byte) bool { _ = "STUB: not implemented"; return false }
 
-func (it *Iterator) Seek(key []byte) bool {
-	it.valid = it.iter.Seek(&core.Item[core.Record]{Key: key})
+func (it *Iterator) Next() bool { _ = "STUB: not implemented"; return false }
 
-	if it.valid {
-		it.currentItem = it.iter.Item()
-	} else {
-		it.currentItem = nil
-	}
+func (it *Iterator) Valid() bool { _ = "STUB: not implemented"; return false }
 
-	return it.valid
-}
+func (it *Iterator) Key() []byte { _ = "STUB: not implemented"; return nil }
 
-func (it *Iterator) Next() bool {
-	if !it.valid {
-		return false
-	}
-
-	if it.options.Reverse {
-		it.valid = it.iter.Prev()
-	} else {
-		it.valid = it.iter.Next()
-	}
-
-	if it.valid {
-		it.currentItem = it.iter.Item()
-	} else {
-		it.currentItem = nil
-	}
-
-	return it.valid
-}
-
-func (it *Iterator) Valid() bool {
-	return it.valid
-}
-
-func (it *Iterator) Key() []byte {
-	if !it.valid {
-		return nil
-	}
-	return it.currentItem.Key
-}
-
-func (it *Iterator) Value() ([]byte, error) {
-	if !it.valid {
-		return nil, ErrKeyNotFound
-	}
-	return it.tx.db.getValueByRecord(it.currentItem.Record)
-}
+func (it *Iterator) Value() ([]byte, error) { _ = "STUB: not implemented"; return nil, nil }
 
 // Item returns the current item (key + record) if valid
 // This is useful for advanced use cases that need direct access to the record
-func (it *Iterator) Item() *core.Item[core.Record] {
-	if !it.valid {
-		return nil
-	}
-	return it.currentItem
-}
+func (it *Iterator) Item() *core.Item[core.Record] { _ = "STUB: not implemented"; return nil }
 
-func (it *Iterator) Release() {
-	it.iter.Release()
-	it.currentItem = nil
-	it.valid = false
-}
+func (it *Iterator) Release() { _ = "STUB: not implemented"; return }

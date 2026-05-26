@@ -29,49 +29,23 @@ type Record struct {
 }
 
 // NewRecord generate a record Obj
-func NewRecord() *Record {
-	return new(Record)
-}
+func NewRecord() *Record { _ = "STUB: not implemented"; return nil }
 
-func (r *Record) WithKey(k []byte) *Record {
-	r.Key = k
-	return r
-}
+func (r *Record) WithKey(k []byte) *Record { _ = "STUB: not implemented"; return nil }
 
 // WithValue set the Value to Record
-func (r *Record) WithValue(v []byte) *Record {
-	r.Value = v
-	return r
-}
+func (r *Record) WithValue(v []byte) *Record { _ = "STUB: not implemented"; return nil }
 
 // WithFileId set FileID to Record
-func (r *Record) WithFileId(fid int64) *Record {
-	r.FileID = fid
-	return r
-}
+func (r *Record) WithFileId(fid int64) *Record { _ = "STUB: not implemented"; return nil }
 
 // WithDataPos set DataPos to Record
-func (r *Record) WithDataPos(pos uint64) *Record {
-	r.DataPos = pos
-	return r
-}
+func (r *Record) WithDataPos(pos uint64) *Record { _ = "STUB: not implemented"; return nil }
 
-func (r *Record) WithValueSize(valueSize uint32) *Record {
-	r.ValueSize = valueSize
-	return r
-}
+func (r *Record) WithValueSize(valueSize uint32) *Record { _ = "STUB: not implemented"; return nil }
 
-func (r *Record) WithTimestamp(timestamp uint64) *Record {
-	r.Timestamp = timestamp
-	return r
-}
+func (r *Record) WithTimestamp(timestamp uint64) *Record { _ = "STUB: not implemented"; return nil }
 
-func (r *Record) WithTTL(ttl uint32) *Record {
-	r.TTL = ttl
-	return r
-}
+func (r *Record) WithTTL(ttl uint32) *Record { _ = "STUB: not implemented"; return nil }
 
-func (r *Record) WithTxID(txID uint64) *Record {
-	r.TxID = txID
-	return r
-}
+func (r *Record) WithTxID(txID uint64) *Record { _ = "STUB: not implemented"; return nil }
